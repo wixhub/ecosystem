@@ -1,0 +1,36 @@
+<main class="eco-container">
+  <header class="eco-card">
+    <h1>Specification Builder</h1>
+    <p>Configure field telemetry parameters for scientific research groups.</p>
+  </header>
+
+  <section class="eco-card">
+    <h2>Field Parameters Configuration</h2>
+
+    <div class="form-group">
+      <label for="samplingFreq">Sampling Frequency (Hz):</label>
+      <input
+        id="samplingFreq"
+        type="number"
+        [value]="samplingFrequency()"
+        (input)="updateFrequency($event)"
+      />
+    </div>
+
+    @if (builderService.isStorageValid()) {
+      <div class="callout success">
+        <p>
+          Estimated Data Volume: <strong>{{ builderService.totalDataVolumeMb() }} MB</strong>
+        </p>
+        <p>✅ Within safe storage limits</p>
+      </div>
+    } @else {
+      <div class="callout warning">
+        <p>
+          Estimated Data Volume: <strong>{{ builderService.totalDataVolumeMb() }} MB</strong>
+        </p>
+        <p>⚠️ Exceeds storage constraints</p>
+      </div>
+    }
+  </section>
+</main>
