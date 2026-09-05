@@ -21,39 +21,9 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: var(--app-bg);
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
-// Main layout wrapper scaling across viewports
-.eco-container {
-  width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 12px;
-
-  @media (min-width: $breakpoint-mobile) {
-    padding: 16px;
-  }
-
-  @media (min-width: $breakpoint-tablet) {
-    padding: 24px;
-  }
-
-  @media (min-width: $breakpoint-desktop) {
-    padding: 32px;
-  }
-}
-
-// Adaptive card component for dynamic questionnaire blocks
-.eco-card {
-  background: var(--card-bg);
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-
-  @media (min-width: $breakpoint-tablet) {
-    padding: 24px;
-  }
+* {
+  box-sizing: border-box;
 }

@@ -18,10 +18,10 @@ High-performance, responsive, and maintainable ecological specification tool bui
 src/
 └── app/
     ├── core/
-    │   ├── layout/          # Global business logic and Web Worker controllers
-    │   └── services/        # Background processing threads for data volume constraints
+    │   ├── models/         # Movebank hierarchy configurations and TypeScript interfaces
+    │   └── services/       # Core business logic and reactive state management (BuilderService)
     └── features/
-        └── builder/        # UI logic, components and schema rendering engine
+        └── builder/        # Wizard UI component, templates, and adaptive styling (builder.html/.scss/.ts)
 ```
 
 ## Development server
@@ -79,9 +79,3 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
-## 📄 License
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-- This project is open-source and available under the [MIT License](./LICENSE).
