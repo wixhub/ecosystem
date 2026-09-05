@@ -1,34 +1,23 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BuilderService } from '../../core/services/builder.service';
+import { UpperCasePipe } from '@angular/common';
 
 @Component({
-  imports: [],
+  imports: [UpperCasePipe],
   selector: 'app-builder',
   styleUrl: './builder.scss',
   templateUrl: './builder.html',
 })
 export class Builder {
-  protected readonly builderService = inject(BuilderService);
+  readonly builderService = inject(BuilderService);
 
-  // Local component signals for form state
-  protected readonly samplingFrequency = signal<number>(1);
-  protected readonly deploymentDays = signal<number>(30);
-  protected readonly packetSizeBytes = signal<number>(128);
+  updateField(key: string, event: Event): void {
+    const target = event.target as HTMLInputElement | HTMLSelectElement;
+    const value =
+      target instanceof HTMLInputElement && target.type === 'checkbox'
+        ? target.checked
+        : target.value;
 
-  /**
-   * Handles sampling frequency input changes and triggers worker calculation
-   */
-  protected updateFrequency(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = parseFloat(input.value);
-
-    if (!isNaN(value)) {
-      this.samplingFrequency.set(value);
-      this.builderService.calculateConstraints(
-        value,
-        this.deploymentDays(),
-        this.packetSizeBytes(),
-      );
-    }
+    this.builderService.updateValue(key, value);
   }
 }

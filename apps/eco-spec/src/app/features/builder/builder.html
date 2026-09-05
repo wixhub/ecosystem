@@ -1,36 +1,144 @@
 <main class="eco-container">
   <header class="eco-card">
-    <h1>Specification Builder</h1>
-    <p>Configure field telemetry parameters for scientific research groups.</p>
+    <h1>Movebank Specification Builder</h1>
+    <p>Step-by-step wizard to configure field telemetry parameters for scientific research</p>
+
+    <!-- Progress Indicator Bar -->
+    <div class="stepper-indicators">
+      @for (step of builderService.steps; track step; let idx = $index) {
+        <div
+          class="step-indicator"
+          [class.active]="builderService.currentStepIndex() === idx"
+          [class.completed]="builderService.currentStepIndex() > idx"
+        >
+          <span>{{ idx + 1 }}</span>
+          <label>{{ step | uppercase }}</label>
+        </div>
+      }
+    </div>
   </header>
 
   <section class="eco-card">
-    <h2>Field Parameters Configuration</h2>
-
-    <div class="form-group">
-      <label for="samplingFreq">Sampling Frequency (Hz):</label>
+    <div class="step-header">
+      <h2>Configuring Entity: {{ builderService.currentEntity() | uppercase }}</h2>
       <input
-        id="samplingFreq"
-        type="number"
-        [value]="samplingFrequency()"
-        (input)="updateFrequency($event)"
+        type="text"
+        class="search-input"
+        placeholder="Search attributes in this step..."
+        (input)="builderService.searchQuery.set($any($event.target).value)"
       />
     </div>
 
-    @if (builderService.isStorageValid()) {
-      <div class="callout success">
-        <p>
-          Estimated Data Volume: <strong>{{ builderService.totalDataVolumeMb() }} MB</strong>
-        </p>
-        <p>✅ Within safe storage limits</p>
+    <div class="parameter-grid">
+      @for (attr of builderService.filteredAttributes(); track attr.key) {
+        <div
+          class="param-row"
+          [class.disabled]="!attr.enabled"
+          [class.has-error]="builderService.attributeErrors()[attr.key]"
+          [class.param-wide]="attr.type === 'text' && !attr.enum"
+        >
+          <div class="param-meta">
+            <input
+              type="checkbox"
+              [checked]="attr.enabled"
+              (change)="builderService.toggleAttribute(attr.key)"
+            />
+            <div>
+              <strong>{{ attr.label }}</strong>
+              <small>{{ attr.key }} ({{ attr.group }})</small>
+              @if (builderService.attributeErrors()[attr.key]; as errorMsg) {
+                <span class="error-msg">⚠️ {{ errorMsg }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="param-control">
+            @if (attr.enum) {
+              <select [disabled]="!attr.enabled" (change)="updateField(attr.key, $event)">
+                @for (opt of attr.enum; track opt) {
+                  <option [value]="opt" [selected]="opt === attr.value">{{ opt }}</option>
+                }
+              </select>
+            } @else if (attr.type === 'boolean') {
+              <input
+                type="checkbox"
+                [disabled]="!attr.enabled"
+                [checked]="attr.value"
+                (change)="updateField(attr.key, $event)"
+              />
+            } @else {
+              <input
+                [disabled]="!attr.enabled"
+                [type]="
+                  attr.type === 'number' || attr.type === 'integer'
+                    ? 'number'
+                    : attr.type === 'date'
+                      ? 'datetime-local'
+                      : 'text'
+                "
+                [value]="attr.value"
+                [min]="attr.minimum ?? null"
+                [max]="attr.maximum ?? null"
+                (input)="updateField(attr.key, $event)"
+              />
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Stepper Navigation Controls & Inline Storage Status -->
+    <div class="stepper-actions">
+      <button
+        class="btn-secondary"
+        [disabled]="builderService.isFirstStep()"
+        (click)="builderService.prevStep()"
+      >
+        Back
+      </button>
+
+      <div class="stepper-status-group">
+        <div class="storage-indicator-inline" [class.warning]="!builderService.isStorageValid()">
+          <span
+            >Estimated Data Volume:
+            <strong>{{ builderService.totalDataVolumeMb() }} MB</strong></span
+          >
+          @if (builderService.isStorageValid()) {
+            <span class="success-text">✅ Within safe limits</span>
+          } @else {
+            <span class="danger-text">⚠️ Exceeds safe limits</span>
+          }
+        </div>
+
+        <div class="selection-counter">
+          Total Active: <strong>{{ builderService.totalEnabledCount() }}</strong>
+        </div>
       </div>
-    } @else {
-      <div class="callout warning">
-        <p>
-          Estimated Data Volume: <strong>{{ builderService.totalDataVolumeMb() }} MB</strong>
-        </p>
-        <p>⚠️ Exceeds storage constraints</p>
-      </div>
-    }
+
+      @if (!builderService.isLastStep()) {
+        <button
+          class="btn-primary"
+          [disabled]="!builderService.isCurrentStepValid()"
+          (click)="builderService.nextStep()"
+        >
+          Next Entity
+        </button>
+      } @else {
+        <button
+          class="btn-success"
+          [disabled]="!builderService.isCurrentStepValid()"
+          (click)="builderService.downloadConfigFile()"
+        >
+          Download Unique JSON Spec
+        </button>
+      }
+    </div>
   </section>
+
+  @if (builderService.isLastStep()) {
+    <section class="eco-card json-preview">
+      <h2>Final Specification JSON Preview</h2>
+      <pre><code>{{ builderService.generateConfigJson() }}</code></pre>
+    </section>
+  }
 </main>
