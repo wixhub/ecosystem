@@ -22,7 +22,7 @@ src/
     │   └── services/       # Core business logic and reactive state management (BuilderService)
     └── features/
         └── builder/        # Wizard UI component, templates, and adaptive styling (builder.html/.scss/.ts)
-```
+````
 
 ## Development server
 
