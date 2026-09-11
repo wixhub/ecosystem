@@ -1,0 +1,390 @@
+.repository-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  color: #2c3e50;
+
+  .repo-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1.5rem;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a365d;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #4a5568;
+      margin-bottom: 1.5rem;
+    }
+
+    .data-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .control-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #4a5568;
+      }
+    }
+
+    /* Dynamic Movebank API Query Panel */
+    .live-query-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      background: #f8fafc;
+      padding: 1.25rem;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      margin-top: 1rem;
+
+      .query-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+
+        label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #4a5568;
+          white-space: nowrap;
+        }
+
+        select,
+        input {
+          height: 42px; /* Fixed height for uniform alignment across fields and buttons */
+          padding: 0 0.75rem;
+          border: 1px solid #cbd5e1;
+          border-radius: 6px;
+          font-size: 0.9rem;
+          background: #ffffff;
+          color: #1e293b;
+          outline: none;
+          box-sizing: border-box;
+          transition: all 0.2s;
+
+          &:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+          }
+        }
+
+        select {
+          min-width: 170px;
+        }
+
+        input {
+          width: 130px;
+        }
+      }
+
+      .api-status-field {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .status-indicator {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          height: 42px; /* Aligned with inputs and buttons */
+          padding: 0 0.85rem;
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
+          border-radius: 50px;
+          font-size: 0.875rem;
+          color: #334155;
+          box-sizing: border-box;
+        }
+
+        .status-dot {
+          width: 8px;
+          height: 8px;
+          background-color: #22c55e;
+          border-radius: 50%;
+          box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+        }
+
+        .status-text {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .count {
+    justify-content: center;
+  }
+
+  /* Universal Buttons UI Balance */
+  .btn {
+    height: 42px; /* Strict height consistency for all controls */
+    padding: 0 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #475569;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+
+    /* Secondary button hover state */
+    &:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      color: #1e293b;
+    }
+
+    /* Secondary button active/selected state */
+    &.active {
+      background: #e2e8f0;
+      color: #1e293b;
+      border-color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* Primary (Live) button styles */
+    &.live-btn {
+      background: #f0fdf4;
+      color: #16a34a;
+      border-color: #bbf7d0;
+      font-weight: 600;
+
+      /* Primary button hover state */
+      &:hover {
+        background: #dcfce7;
+        border-color: #86efac;
+      }
+
+      /* Primary button active state */
+      &.active {
+        background: #16a34a;
+        color: #ffffff;
+        border-color: #16a34a;
+      }
+    }
+
+    /* Mock button styles */
+    &.mock-btn {
+      background: #f8fafc;
+      color: #475569;
+
+      &.active {
+        background: #e2e8f0;
+        color: #0f172a;
+        border-color: #64748b;
+      }
+    }
+
+    /* Reset button styles */
+    &.reset-btn {
+      color: #64748b;
+
+      &:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #fca5a5;
+      }
+    }
+  }
+
+  /* States */
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: #64748b;
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #3182ce;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .error-banner {
+    background: #fff5f5;
+    border: 1px solid #feb2b2;
+    color: #c53030;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Dataset Grid & Cards */
+  .dataset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+
+    .dataset-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .card-meta-top {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+
+        .badge {
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+
+          &.discipline {
+            background: #eef2ff;
+            color: #4f46e5;
+          }
+
+          &.format {
+            background: #f1f5f9;
+            color: #475569;
+          }
+        }
+      }
+
+      .dataset-title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+      }
+
+      .dataset-doi {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-bottom: 0.75rem;
+      }
+
+      .dataset-abstract {
+        font-size: 0.9rem;
+        color: #475569;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .dataset-authors {
+        font-size: 0.85rem;
+        color: #334155;
+        margin-bottom: 1rem;
+      }
+
+      .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1.25rem;
+
+        .tag {
+          font-size: 0.75rem;
+          background: #f8fafc;
+          color: #64748b;
+          padding: 0.15rem 0.4rem;
+          border-radius: 4px;
+          border: 1px solid #e2e8f0;
+        }
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #64748b;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 0.75rem;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* AI Prompt Field Styling */
+.ai-prompt-field {
+  flex: 1 1 100% !important; // Makes AI input span full width of the top row
+
+  .ai-input-group {
+    display: flex;
+    gap: 0.5rem;
+
+    input {
+      flex: 1;
+      width: auto !important;
+      height: 42px;
+      border-color: #cbd5e1;
+
+      &:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      }
+    }
+  }
+
+  .ai-btn {
+    height: 42px;
+    background: #eef2ff;
+    color: #4f46e5;
+    border-color: #c7d2fe;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &:hover {
+      background: #e0e7ff;
+      border-color: #a5b4fc;
+    }
+  }
+}

@@ -1,0 +1,166 @@
+<div class="repository-container">
+  <!-- Header Section -->
+  <header class="repo-header">
+    <h1>MoveRDM Dataset Explorer</h1>
+
+    <p class="subtitle">
+      Research Data Repository Prototype integrating live telemetry from the
+      <a href="https://www.movebank.org/" target="_blank" rel="noopener">Movebank API</a>
+      <br />
+      A global infrastructure coordinated by the
+      <a href="https://www.mpg.de/" target="_blank" rel="noopener"
+        >Max Planck Institute of Animal Behavior</a
+      >, the
+      <a href="https://www.uni-konstanz.de/" target="_blank" rel="noopener"
+        >University of Konstanz</a
+      >
+      and partner institutions
+    </p>
+
+    <!-- Dynamic Movebank API Query Panel (Updated for signal-based component) -->
+    <div class="live-query-panel">
+      <!-- AI Natural Language Prompt Field -->
+      <div class="query-field ai-prompt-field">
+        <label for="aiPrompt">🤖 AI Assistant Query:</label>
+        <div class="ai-input-group">
+          <input
+            id="aiPrompt"
+            type="text"
+            [value]="aiPrompt()"
+            (input)="aiPrompt.set($any($event.target).value)"
+            placeholder="e.g. find studies about white storks"
+          />
+          <button type="button" class="btn ai-btn" (click)="onAiSearch()">✨ Ask AI</button>
+        </div>
+      </div>
+
+      <div class="query-field">
+        <label for="entityType">Entity</label>
+        <select
+          id="entityType"
+          [value]="entityType()"
+          (change)="entityType.set($any($event.target).value)"
+        >
+          <option value="study">Studies (List)</option>
+          <option value="event">Events (Telemetry Data)</option>
+          <option value="tag_type">Tag Types (Sensors)</option>
+          <option value="taxon">Taxons (Animal Species)</option>
+          <option value="deployment">Deployments (Tracking events)</option>
+        </select>
+      </div>
+
+      <div class="query-field">
+        <label for="studyId">Study ID (Optional)</label>
+        <input
+          id="studyId"
+          type="text"
+          [value]="studyId()"
+          (input)="studyId.set($any($event.target).value)"
+          placeholder="e.g. 123456"
+        />
+      </div>
+
+      <div class="query-field">
+        <label>Movebank Source</label>
+        <button
+          type="button"
+          class="btn live-btn"
+          [class.active]="activeSource() === 'live'"
+          (click)="loadCustomLiveQuery()"
+        >
+          🌐 Fetch Live API
+        </button>
+      </div>
+
+      <div class="query-field api-status-field">
+        <label>Status</label>
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          <span class="status-text">Movebank API: Connected</span>
+        </div>
+      </div>
+
+      <div class="query-field api-status-field">
+        <label>Total Datasets</label>
+        <div class="status-indicator count">
+          <span class="status-text"> {{ datasets().length }}</span>
+        </div>
+      </div>
+
+      <div class="query-field mock-btn">
+        <label>Mock Data</label>
+        <button
+          type="button"
+          class="btn mock-btn"
+          [class.active]="activeSource() === 'mock'"
+          (click)="loadMockData()"
+        >
+          📂 Local Mock
+        </button>
+      </div>
+
+      <div class="query-field">
+        <label>Actions</label>
+        <button
+          type="button"
+          class="btn reset-btn"
+          (click)="resetFilters()"
+          title="Clear all filters and inputs"
+        >
+          🔄 Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Synchronizing repository records...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage()) {
+    <div class="error-banner">
+      <p>{{ errorMessage() }}</p>
+    </div>
+  }
+
+  <!-- Dataset Grid -->
+  @if (!isLoading() && datasets().length > 0) {
+    <div class="dataset-grid">
+      @for (dataset of datasets(); track dataset.id) {
+        <article class="dataset-card">
+          <div class="card-meta-top">
+            <span class="badge discipline">{{ dataset.discipline }}</span>
+            <span class="badge format">{{ dataset.format }}</span>
+          </div>
+
+          <h3 class="dataset-title">{{ dataset.title }}</h3>
+          <p class="dataset-doi"><strong>DOI / ID:</strong> {{ dataset.doi }}</p>
+          <p class="dataset-abstract">{{ dataset.abstract }}</p>
+
+          <div class="dataset-authors">
+            <strong>Authors:</strong> {{ dataset.authors.join(', ') }}
+          </div>
+
+          <div class="tags-container">
+            @for (tag of dataset.tags; track tag) {
+              <span class="tag">#{{ tag }}</span>
+            }
+          </div>
+
+          <footer class="card-footer">
+            <span class="file-size">📦 {{ dataset.fileSize }}</span>
+            <span class="downloads">⬇️ {{ dataset.downloadsCount }} downloads</span>
+          </footer>
+        </article>
+      }
+    </div>
+  }
+
+  <!-- Global App Footer with Links -->
+  <app-footer />
+</div>
