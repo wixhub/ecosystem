@@ -1,0 +1,272 @@
+@use '../../../styles/mixins' as *;
+
+// Dashboard Container Layout
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-4);
+
+  @include respond-to(md) {
+    padding: var(--space-8);
+  }
+
+  // Clean Header Section (No background frame)
+  .dashboard-header-clean {
+    margin-bottom: var(--space-4);
+
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: var(--space-1);
+
+      @include respond-to(md) {
+        font-size: var(--text-3xl);
+      }
+    }
+  }
+
+  // Interactive Controls Panel (Placed below the header)
+  .controls-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-6);
+    align-items: flex-end;
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 240px;
+
+      .input-hint {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+      }
+    }
+
+    .study-input-group {
+      display: flex;
+      gap: var(--space-2);
+
+      input {
+        background: var(--bg-primary);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-sans);
+        font-size: var(--text-sm);
+        flex: 1;
+        height: 38px;
+        outline: none;
+        transition: var(--transition-smooth);
+
+        &:focus {
+          border-color: var(--border-focus);
+        }
+      }
+
+      button {
+        background: var(--bg-primary);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        padding: 0 var(--space-4);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-sans);
+        font-size: var(--text-sm);
+        height: 38px;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+
+        &:hover {
+          border-color: var(--border-focus);
+          background: var(--border-color);
+        }
+      }
+    }
+
+    select {
+      background: var(--bg-primary);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0 var(--space-3);
+      height: 38px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      outline: none;
+      width: 100%;
+      transition: var(--transition-smooth);
+
+      &:focus {
+        border-color: var(--border-focus);
+      }
+    }
+  }
+
+  // Inline Error Banner Styling with Fade-in Animation
+  .error-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    animation: fadeIn 0.3s ease-in-out;
+
+    .error-content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+
+      svg {
+        flex-shrink: 0;
+      }
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Statistics Grid Section
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+
+    @include respond-to(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to(lg) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  // Visualizations & Trajectory Log Grid Section
+  .visualization-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+
+    @include respond-to(xl) {
+      grid-template-columns: 2fr 1fr;
+    }
+
+    .chart-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .trajectory-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      min-height: 420px;
+      max-height: 420px;
+      display: flex;
+      flex-direction: column;
+
+      h3 {
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: var(--space-3);
+      }
+
+      .trajectory-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        overflow-y: auto;
+        flex: 1;
+        padding-right: var(--space-1);
+
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+        &::-webkit-scrollbar-track {
+          background: var(--bg-primary);
+          border-radius: var(--radius-sm);
+        }
+        &::-webkit-scrollbar-thumb {
+          background: var(--border-color);
+          border-radius: var(--radius-sm);
+        }
+
+        .trajectory-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: var(--bg-primary);
+          border: 1px solid var(--border-color);
+          padding: var(--space-2) var(--space-3);
+          border-radius: var(--radius-sm);
+          font-size: var(--text-sm);
+
+          .time {
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+          }
+
+          .coords {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+          }
+        }
+      }
+    }
+  }
+}
