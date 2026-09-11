@@ -1,0 +1,162 @@
+<div class="dashboard-container">
+  <!-- Header with Title and Modern Action Bar -->
+  <div class="dashboard-header">
+    <div>
+      <div class="title-row">
+        <h2>Ecological Metadata Harvester Dashboard</h2>
+        <span class="sandbox-badge">🧪 Sandbox Mode</span>
+      </div>
+      <p class="subtitle">
+        Welcome! This portal allows researchers to ingest, validate and manage ecological metadata -
+        such as Movebank XML and Darwin Core Archives - designed for institutional DSpace repository
+        integration.
+      </p>
+    </div>
+    <div class="actions-bar">
+      <button
+        routerLink="/ingest"
+        [disabled]="loading()"
+        [class.btn-disabled]="loading()"
+        class="btn-primary"
+      >
+        + New Ingestion Job
+      </button>
+      <button
+        routerLink="/explorer"
+        [disabled]="loading()"
+        [class.btn-disabled]="loading()"
+        class="btn-secondary"
+      >
+        Explore Repository
+      </button>
+    </div>
+  </div>
+
+  <!-- Recent Activity Section -->
+  <div class="recent-section">
+    @if (loading()) {
+      <!-- Cold start wake-up notice with dynamic countdown for scientists -->
+      <app-loader [wakeUpCountdown]="wakeUpCountdown()" />
+    } @else {
+      <!-- Informational Banner -->
+      <div class="info-card">
+        <div class="info-icon">💡</div>
+        <div class="info-content">
+          <h4>How to validate your metadata</h4>
+          <p>
+            <strong>Step-by-step guide:</strong>
+          </p>
+          <ol>
+            <li>Click <strong>+ New Ingestion Job</strong> in the top right corner.</li>
+            <li>
+              Upload your ecological metadata file (Movebank XML, DwC-A zip, etc.). The format can
+              be auto-detected!
+            </li>
+            <li>
+              The Java backend on Render instantly parses and validates your file. If there's an
+              error, you will see it immediately on a red alert banner before finalizing.
+            </li>
+            <li>
+              Once valid, check the live status in the table below: <code>PROCESSED</code> means
+              ready for DSpace.
+            </li>
+          </ol>
+          <p style="font-size: 0.9em; color: #555; margin-top: 6px">
+            <em
+              >Note: Currently running in Sandbox Mode. Need custom DSpace OAuth/REST integration
+              for your institution? Contact us below!</em
+            >
+          </p>
+          <div class="project-links" style="margin-top: 8px">
+            <span>🔗 Useful links: </span>
+            <a href="https://movebank.org" target="_blank">Movebank Standard</a>
+            <a href="https://dwc.tdwg.org" target="_blank">Darwin Core (DwC)</a>
+            <a href="https://dspace.org" target="_blank">DSpace Repository</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Grid with Clickable Cards -->
+      <app-metrics-grid
+        [totalDatasetsCount]="totalDatasetsCount()"
+        [successfulCount]="successfulCount()"
+        [failedValidationsCount]="failedValidationsCount()"
+        [activeCard]="activeCard()"
+        (cardSelected)="selectCard($event)"
+      />
+
+      <h3>
+        Recent Ingestion Activity
+        <span style="font-size: 13px; font-weight: normal; color: #64748b">
+          (Showing: <strong>{{ activeCard() }}</strong
+          >)
+        </span>
+      </h3>
+
+      <!-- Material Table with Sorting -->
+      <table mat-table [dataSource]="dataSource" matSort class="data-table">
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-id">ID</th>
+          <td mat-cell *matCellDef="let item" class="col-id">
+            <code>{{ item.id }}</code>
+          </td>
+        </ng-container>
+
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-title">Title / File</th>
+          <td mat-cell *matCellDef="let item" class="col-title">
+            <strong>{{ item.title }}</strong>
+          </td>
+        </ng-container>
+
+        <!-- Format Column -->
+        <ng-container matColumnDef="format">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-format">Format</th>
+          <td mat-cell *matCellDef="let item" class="col-format">
+            <span class="badge">{{ item.format }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-status">Status</th>
+          <td mat-cell *matCellDef="let item" class="col-status">
+            <span [class]="'status-' + item.status.toLowerCase()">
+              {{ item.status }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Records Column -->
+        <ng-container matColumnDef="recordCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-records">Records</th>
+          <td mat-cell *matCellDef="let item" class="col-records">{{ item.recordCount ?? '—' }}</td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-date">Date</th>
+          <td mat-cell *matCellDef="let item" class="col-date">
+            {{ item.updatedAt | date: 'short' }}
+          </td>
+        </ng-container>
+
+        <!-- Header and Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <!-- Empty State handling if table data is empty -->
+      @if (dataSource.data.length === 0) {
+        <div class="empty-state" style="padding: 24px; text-align: center; color: #64748b">
+          No ingestion logs found for this category.
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Support & Author Footer -->
+  <app-footer />
+</div>
