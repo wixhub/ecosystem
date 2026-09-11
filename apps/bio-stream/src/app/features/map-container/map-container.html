@@ -1,0 +1,94 @@
+<main class="app-root-layout">
+  <header class="app-header">
+    <div class="brand">
+      <h1>Bio-Telemetry Spatial Visualizer</h1>
+      <span class="subtitle">Advanced Migration Mapping Engine</span>
+    </div>
+
+    <!-- Data Source Switcher Toolbar -->
+    <div class="data-source-switcher">
+      <div class="filter-group">
+        <label for="studyInput">Study ID:</label>
+        <input
+          id="studyInput"
+          type="text"
+          class="study-input"
+          [value]="selectedStudyId()"
+          (input)="onStudyChange($event)"
+          placeholder="Enter Study ID..."
+        />
+      </div>
+
+      <button
+        type="button"
+        class="btn-source live"
+        [disabled]="telemetryService.isLoading()"
+        (click)="switchToLiveDataset(selectedStudyId())"
+      >
+        @if (telemetryService.isLoading()) {
+          <span class="spinner"></span> Loading...
+        } @else {
+          Fetch Live API
+        }
+      </button>
+    </div>
+  </header>
+
+  <!-- Auto-closing Error Notification Banner (12 seconds) -->
+  @if (errorMessage()) {
+    <div class="error-banner">
+      <span>⚠️ {{ errorMessage() }}</span>
+      <button type="button" class="close-btn" (click)="dismissError()">×</button>
+    </div>
+  }
+
+  <section class="viewport-section">
+    <div class="spatial-viewport">
+      <div id="leaflet-spatial-canvas" class="map-canvas"></div>
+
+      <div class="overlay-hud">
+        <app-telemetry-filters (filterChange)="onFilterUpdated($event)" />
+
+        @defer (on idle) {
+          <app-telemetry-analytics [records]="filteredRecords()" />
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer with Data Attribution, MIT License and Author Links -->
+  <footer class="app-footer">
+    <div class="attribution-info">
+      <span
+        >Data: <a href="https://www.movebank.org" target="_blank" rel="noopener">Movebank</a> &
+        study contributors</span
+      >
+      <span>•</span>
+      <span
+        >Maps: <a href="https://carto.com" target="_blank" rel="noopener">CARTO</a>,
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener"
+          >OpenStreetMap</a
+        ></span
+      >
+      <span>•</span>
+      <span
+        >License:
+        <a
+          href="https://github.com/wixhub/bio-stream/blob/main/LICENSE"
+          target="_blank"
+          rel="noopener"
+          >MIT</a
+        ></span
+      >
+    </div>
+    <div class="author-attribution">
+      Engineered by
+      <a href="https://github.com/wixhub" target="_blank" rel="noopener">wixhub</a> (<a
+        href="https://github.com/wixhub/bio-stream"
+        target="_blank"
+        rel="noopener"
+        >Repository Source</a
+      >)
+    </div>
+  </footer>
+</main>
