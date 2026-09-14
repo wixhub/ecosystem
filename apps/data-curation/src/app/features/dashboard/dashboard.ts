@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { TrackingStateService } from '../../core/services/tracking-state.service';
+import { TrackingStateService } from '@es/data-access';
 import { DataGrid } from '../data-grid/data-grid';
 import { MapInspector } from '../map-inspector/map-inspector';
-import { Footer } from '../../core/layout/footer/footer';
-import { Header } from '../../core/layout/header/header';
+import { Footer, Header } from '@es/ui';
 
 @Component({
   selector: 'app-dashboard',
