@@ -7,6 +7,7 @@ out-tsc
 
 # dependencies
 node_modules
+libs/config/src/carto-config.ts
 
 # IDEs and editors
 /.idea
