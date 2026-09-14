@@ -19,7 +19,7 @@ export class LeafletMapService {
   public initializeMap(
     containerId: string,
     initialCenter: [number, number] = [20, 0],
-    zoom: number = 3,
+    zoom = 3,
   ): void {
     if (this.mapInstance) return;
 
