@@ -48,11 +48,11 @@ libs/
 
 The shared domain logic is centralized under libs/data-access:
 
-- models/: Strongly typed domain contracts for telemetry data packets, tracking deployments, and metadata schemas.
+- models/: Strongly typed domain contracts for telemetry data packets, tracking deployments and metadata schemas.
 
-- services/: Shared API communication layers, backend connectors, and state management utilities.
+- services/: Shared API communication layers, backend connectors and state management utilities.
 
-- utils/: High-performance helpers for spatial calculations, time-series parsing, and background worker messaging.
+- utils/: High-performance helpers for spatial calculations, time-series parsing and background worker messaging.
 
 ---
 
@@ -133,7 +133,7 @@ npx nx g ci-workflow
 
 ## Install Nx Console
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
 
 [Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
