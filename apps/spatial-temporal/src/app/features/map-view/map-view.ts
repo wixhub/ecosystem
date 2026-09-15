@@ -10,7 +10,7 @@ import {
 import * as L from 'leaflet';
 import { MigrationService } from '../../core/services/migration.service';
 import { AnimalTrack } from '../../core/models/telemetry.model';
-import { environment } from '../../../environments/environment';
+import { CARTO_API_KEY } from '@es/config';
 
 @Component({
   selector: 'app-map-view',
@@ -63,7 +63,7 @@ export class MapView implements AfterViewInit, OnDestroy {
 
     // Dark scientific CartoDB Dark Matter tile layer
     L.tileLayer(
-      `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${environment.cartoApiKey}`,
+      `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`,
       {
         attribution: '&copy; CARTO',
         maxZoom: 19,
