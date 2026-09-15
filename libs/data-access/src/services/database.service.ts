@@ -1,3 +1,4 @@
+// Project data-curation
 import { Service } from '@angular/core';
 import Dexie, { Table } from 'dexie';
 import {
@@ -30,7 +31,9 @@ export class DatabaseService extends Dexie {
     overrides: Map<string, ManualOverride>,
     filters: FilterCriteria,
   ): Promise<void> {
-    const serializedOverrides: CurationSession['manualOverrides'] = Array.from(overrides.entries());
+    const serializedOverrides: CurationSession['manualOverrides'] = Array.from(
+      overrides.entries(),
+    );
 
     await this.transaction('rw', this.sessions, async () => {
       await this.sessions.clear();

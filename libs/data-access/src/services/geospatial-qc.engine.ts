@@ -1,3 +1,4 @@
+// Project data-curation
 import { Service } from '@angular/core';
 import { GeospatialQcOptions, TrackingPoint } from '../models/tracking.model';
 
@@ -7,7 +8,8 @@ export class GeospatialQcEngine {
     const { maxSpeedThreshold, manualOverrides } = options;
 
     const sorted = [...points].sort(
-      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
 
     // Track the last seen point independently for each individual
@@ -17,8 +19,14 @@ export class GeospatialQcEngine {
       const previousPoint = lastPointMap.get(point.individualId);
       lastPointMap.set(point.individualId, point);
 
-      const speedKmH = previousPoint ? this.calculateSpeed(previousPoint, point) : 0;
-      const automaticResult = this.evaluatePoint(point, speedKmH, maxSpeedThreshold);
+      const speedKmH = previousPoint
+        ? this.calculateSpeed(previousPoint, point)
+        : 0;
+      const automaticResult = this.evaluatePoint(
+        point,
+        speedKmH,
+        maxSpeedThreshold,
+      );
       const override = manualOverrides.get(point.id);
 
       if (override) {
@@ -41,7 +49,10 @@ export class GeospatialQcEngine {
     });
   }
 
-  private calculateSpeed(previous: TrackingPoint, current: TrackingPoint): number {
+  private calculateSpeed(
+    previous: TrackingPoint,
+    current: TrackingPoint,
+  ): number {
     const previousTimestamp = new Date(previous.timestamp).getTime();
     const currentTimestamp = new Date(current.timestamp).getTime();
     const timeHours = (currentTimestamp - previousTimestamp) / 3_600_000;
@@ -66,27 +77,44 @@ export class GeospatialQcEngine {
     maxSpeedThreshold: number,
   ): { isFlagged: boolean; flagReason: string } {
     if (speedKmH > maxSpeedThreshold) {
-      return { isFlagged: true, flagReason: `Excessive speed: ${speedKmH} km/h` };
+      return {
+        isFlagged: true,
+        flagReason: `Excessive speed: ${speedKmH} km/h`,
+      };
     }
 
     if (point.accuracyMeters > 100) {
-      return { isFlagged: true, flagReason: `Low GPS accuracy: ${point.accuracyMeters}m` };
+      return {
+        isFlagged: true,
+        flagReason: `Low GPS accuracy: ${point.accuracyMeters}m`,
+      };
     }
 
     return { isFlagged: false, flagReason: '' };
   }
 
-  private haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  private haversine(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ): number {
     const earthRadiusKm = 6371;
     const dLat = this.toRadians(lat2 - lat1);
     const dLon = this.toRadians(lon2 - lon1);
     const rLat1 = this.toRadians(lat1);
     const rLat2 = this.toRadians(lat2);
 
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(rLat1) * Math.cos(rLat2) * Math.sin(dLon / 2) ** 2;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(rLat1) * Math.cos(rLat2) * Math.sin(dLon / 2) ** 2;
 
     const clampedA = Math.min(1, Math.max(0, a));
-    return earthRadiusKm * 2 * Math.atan2(Math.sqrt(clampedA), Math.sqrt(1 - clampedA));
+    return (
+      earthRadiusKm *
+      2 *
+      Math.atan2(Math.sqrt(clampedA), Math.sqrt(1 - clampedA))
+    );
   }
 
   private toRadians(degrees: number): number {

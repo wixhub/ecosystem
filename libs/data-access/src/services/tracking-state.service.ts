@@ -1,10 +1,16 @@
+// Project data-curation
 import { Service, computed, effect, inject, signal } from '@angular/core';
 import { TrackingApiService } from './tracking-api.service';
 import { TrackingParserService } from './tracking-parser.service';
 import { GeospatialQcEngine } from './geospatial-qc.engine';
 import { DatabaseService } from './database.service';
 import { exportTrackingData } from '../utils/export.utils';
-import { FilterCriteria, ManualOverride, TrackingPoint, ViewMode } from '../models/tracking.model';
+import {
+  FilterCriteria,
+  ManualOverride,
+  TrackingPoint,
+  ViewMode,
+} from '../models/tracking.model';
 
 @Service()
 export class TrackingStateService {
@@ -30,7 +36,9 @@ export class TrackingStateService {
   };
 
   readonly filters = signal<FilterCriteria>({ ...this.defaultFilters });
-  readonly isLoading = computed(() => this.apiService.tracksResource.isLoading());
+  readonly isLoading = computed(() =>
+    this.apiService.tracksResource.isLoading(),
+  );
 
   readonly baseRawData = computed(() => {
     const uploaded = this.uploadedTracks();
@@ -70,7 +78,10 @@ export class TrackingStateService {
       if (currentFilters.showOnlyFlagged && !point.isFlagged) {
         return false;
       }
-      if (currentFilters.startDate && point.timestamp < currentFilters.startDate) {
+      if (
+        currentFilters.startDate &&
+        point.timestamp < currentFilters.startDate
+      ) {
         return false;
       }
       if (currentFilters.endDate && point.timestamp > currentFilters.endDate) {
@@ -220,7 +231,9 @@ export class TrackingStateService {
     const currentTracks = this.uploadedTracks();
     if (currentTracks === null) return;
 
-    this.uploadedTracks.set(currentTracks.filter((point) => point.id !== pointId));
+    this.uploadedTracks.set(
+      currentTracks.filter((point) => point.id !== pointId),
+    );
     this.manualOverrides.update((current) => {
       const next = new Map(current);
       next.delete(pointId);

@@ -1,3 +1,4 @@
+// Project data-curation
 export type ViewMode = 'split' | 'table-only' | 'map-only';
 
 export interface TrackingPoint {

@@ -1,3 +1,4 @@
+// Project data-curation
 import { Service } from '@angular/core';
 import { TrackingPoint } from '../models/tracking.model';
 
@@ -28,11 +29,13 @@ export class TrackingParserService {
 
       points.push({
         id: record['id'] || `imported_${i}`,
-        individualId: record['individual'] || record['individualid'] || 'Unknown',
+        individualId:
+          record['individual'] || record['individualid'] || 'Unknown',
         timestamp: record['timestamp'] || new Date().toISOString(),
         latitude: Number(record['latitude']) || 0,
         longitude: Number(record['longitude']) || 0,
-        accuracyMeters: Number(record['accuracy'] || record['accuracymeters']) || 10,
+        accuracyMeters:
+          Number(record['accuracy'] || record['accuracymeters']) || 10,
         speedKmH: Number(record['speed'] || record['speedkmh']) || 0,
         isFlagged: record['flagged'] === 'true',
         flagReason: record['flagreason'] || '',
