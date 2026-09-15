@@ -1,8 +1,60 @@
-# Ecosystem
+# MoveRDM Ecological Telemetry Ecosystem ⚗️
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A comprehensive suite of enterprise-grade scientific web applications, micro-frontends and metadata pipelines designed for ecological research, animal migration telemetry and Movebank-compatible data management.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## 🏛️ Monorepo Architecture
+
+The workspace is structured as a scalable monorepo separating specialized scientific applications from shared libraries:
+
+```text
+apps/
+├── bio-stream/          # Spatial rendering engine for migration data
+├── data-curation/       # Interactive tracking data utility
+├── eco-spec/            # Telemetry specification wizard
+├── metadata-harvester/  # Metadata ingestion pipeline & REST gateway
+├── movebank-explorer/   # Frontend repository prototype
+├── sensor-streams/      # Multi-dimensional sensor dashboard
+├── spatial-temporal/    # Migration playback & geographical visualization
+├── zeo/                 # Core utility application
+└── zeo-e2e/             # End-to-end testing suite
+libs/
+├── config/              # Shared configuration management
+└── data-access/         # Shared domain models, services and utils
+```
+
+## 🚀 Applications Portfolio
+
+**eco-spec** ⚗️ Professional specification wizard for configuring hierarchical Movebank telemetry parameters and generating structured JSON schemas, featuring real-time data volume calculations processed in a background Web Worker thread <br> | Angular, Signals, Web Workers → 🌐 [Live Demo](https://eco-spec.pages.dev)
+
+- **metadata-harvester** ☄︎ Enterprise-grade metadata ingestion pipeline & REST gateway for ecological research data management <br>
+  | Java, Spring Boot, Angular, PostgreSQL, Docker → 🌐 [Live Demo](https://metadata-harvester.pages.dev)
+
+- **movebank-explorer-web** ☄︎ Responsive frontend prototype for research data repositories, built for the MoveRDM ecosystem <br>
+  | Angular, Groq AI, Workers → 🌐 [Live Demo](https://movebank-explorer.pages.dev)
+
+- **spatial-temporal** ☄︎ High-performance scientific web application for interactive playback and visualization of animal migration telemetry over geographical map layers, incorporating timeline controls and speed scaling <br>
+  | Angular, Leaflet, Workers → 🌐 [Live Demo](https://spatial-temporal.pages.dev)
+
+- **sensor-streams** ☄︎ The scientific dashboard designed to visualize multi-dimensional sensor streams, combining GPS tracking with accelerometer and environmental data through synchronized time-series charts <br>
+  | Angular, ChartJS, Workers → 🌐 [Live Demo](https://sensor-streams.pages.dev)
+
+- **bio-stream** ☄︎ Spatial rendering engine for migratory animal tracking data <br>
+  | Angular, Leaflet, Workers → 🌐 [Live Demo](https://bio-stream.pages.dev)
+
+- **data-curation** ☄︎ Interactive web utility for researchers working with animal tracking data <br>
+  | Angular & Leaflet → 🌐 [Live Demo](https://data-curation.pages.dev)
+
+## 📦 Core Shared Libraries (libs/data-access)
+
+The shared domain logic is centralized under libs/data-access:
+
+- models/: Strongly typed domain contracts for telemetry data packets, tracking deployments, and metadata schemas.
+
+- services/: Shared API communication layers, backend connectors, and state management utilities.
+
+- utils/: High-performance helpers for spatial calculations, time-series parsing, and background worker messaging.
+
+---
 
 [Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
