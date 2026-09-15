@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { TrackingPoint } from '../../core/models/tracking.model';
+import { TrackingPoint } from '@es/data-access';
 import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
