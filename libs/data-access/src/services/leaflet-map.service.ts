@@ -62,10 +62,7 @@ export abstract class LeafletMapService {
   /**
    * Fits the map viewport around the provided coordinates.
    */
-  protected fitBounds(
-    latLngs: readonly L.LatLngExpression[],
-    maxZoom: number,
-  ): void {
+  protected fitBounds(latLngs: L.LatLngExpression[], maxZoom: number): void {
     if (!this.mapInstance || latLngs.length === 0) {
       return;
     }
