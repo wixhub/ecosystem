@@ -1,5 +1,5 @@
 import { Component, output, signal } from '@angular/core';
-import { TelemetryFilterModel, SpeciesType } from '../../core/models/telemetry.model';
+import { TelemetryFilterModel, SpeciesType } from '@es/data-access';
 
 @Component({
   selector: 'app-telemetry-filters',
