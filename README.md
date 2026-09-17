@@ -152,3 +152,25 @@ And join the Nx community:
 - [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
 - [Our Youtube channel](https://www.youtube.com/@nxdevtools)
 - [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome! Feel free to check the [issues page](https://github.com/wixhub/ecosystem/issues).
+
+## 📬 Contact & Support
+
+If you have any questions, suggestions, or feedback regarding this project, feel free to reach out:
+
+- **Author:** [@wixhub](https://github.com/wixhub)
+- **Telegram:** [@typeweb](https://t.me/typeweb)
+- **GitHub Repository:** [ecosystem](https://github.com/wixhub/ecosystem)
+
+## 📄 License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+- This project is open-source and available under the [MIT License](./LICENSE).
+
+- **Data Attribution**: Data provided by **[Movebank](www.movebank.org)** and individual researchers.
