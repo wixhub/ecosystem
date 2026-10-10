@@ -165,7 +165,6 @@ If you have any questions, suggestions, or feedback regarding this project, feel
 
 - **Author:** [@wixhub](https://github.com/wixhub)
 - **Telegram:** [@typeweb](https://t.me/typeweb)
-- **GitHub Repository:** [ecosystem](https://github.com/wixhub/ecosystem)
 
 ## 📄 License
 
