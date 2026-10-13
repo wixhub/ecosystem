@@ -82,7 +82,7 @@ export class MapView implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.map) {
       this.map.remove();
-      (this.map as any) = undefined;
+      (this.map as unknown) = undefined;
     }
   }
 
@@ -145,7 +145,7 @@ export class MapView implements AfterViewInit, OnDestroy {
       // Render recent historical trail polyline up to current playback head
       const trailLatLngs = trail.map((p: any) => [p.latitude, p.longitude] as [number, number]);
       if (this.trailLayers.has(track.individualId)) {
-        this.trailLayers.get(track.individualId)!.setLatLngs(trailLatLngs);
+        this.trailLayers.get(track.individualId)?.setLatLngs(trailLatLngs);
       } else {
         const trailLine = L.polyline(trailLatLngs, {
           color: track.color,
