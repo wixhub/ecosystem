@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       app-name:
-        description: 'Name of the Nx application to build, test, and deploy'
+        description: 'Name of the Nx application to build, test and deploy'
         required: true
         type: string
     secrets:
@@ -83,7 +83,7 @@ jobs:
 
       # 6. Build the application for production
       - name: Build application
-        run: npx nx build ${{ inputs.app-name }} --production
+        run: npx nx build ${{ inputs.app-name }}
 
       # 7. Deploy compiled bundle to Cloudflare Pages via wrangler-action
       - name: Deploy to Cloudflare Pages
