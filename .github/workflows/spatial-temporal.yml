@@ -1,6 +1,7 @@
 name: Spatial-Temporal CI/CD
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'
