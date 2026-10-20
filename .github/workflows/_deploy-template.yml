@@ -46,6 +46,12 @@ jobs:
             cp "$ENV_EXAMPLE" "$ENV_FILE"
           fi
 
+      - name: Create carto configuration
+        run: |
+          if [ -f "libs/config/src/lib/carto-config.example.ts" ]; then
+            cp "libs/config/src/lib/carto-config.example.ts" "libs/config/src/lib/carto-config.ts"
+          fi
+
       - name: Install dependencies
         run: npm ci
 
