@@ -1,0 +1,68 @@
+name: Shared App CI/CD Template
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        description: 'Name of the Nx application to build and test'
+        required: true
+        type: string
+    secrets:
+      cloudflare-token:
+        description: 'Cloudflare API Token for deployment'
+        required: false
+      cloudflare-project-id:
+        description: 'Cloudflare Account or Project ID'
+        required: false
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    # 1. Map workflow_call secrets to job-level environment variables
+    env:
+      CF_TOKEN: ${{ secrets.cloudflare-api-token }}
+      CF_PROJECT_ID: ${{ secrets.cloudflare-account-id }}
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Create environment configuration
+        run: |
+          ENV_EXAMPLE="apps/${{ inputs.app-name }}/src/environments/environment.example.ts"
+          ENV_FILE="apps/${{ inputs.app-name }}/src/environments/environment.ts"
+          if [ -f "$ENV_EXAMPLE" ]; then
+            cp "$ENV_EXAMPLE" "$ENV_FILE"
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npx nx test ${{ inputs.app-name }} --watch=false
+
+      - name: Build application
+        run: npx nx build ${{ inputs.app-name }} --production
+
+      # 2. Use environment variables instead of direct secrets context in steps
+      - name: Deploy to Cloudflare Pages
+        if: ${{ env.CF_TOKEN != '' }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ env.CF_TOKEN }}
+          accountId: ${{ env.CF_PROJECT_ID }}
+          command: pages deploy dist/apps/${{ inputs.app-name }} --project-name=${{ inputs.app-name }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ env.CF_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ env.CF_PROJECT_ID }}
