@@ -16,5 +16,6 @@ jobs:
     with:
       app-name: spatial-temporal
     secrets:
-      cloudflare-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      cloudflare-project-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      cloudflare-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      carto-api-key: ${{ secrets.CARTO_API_KEY }}
