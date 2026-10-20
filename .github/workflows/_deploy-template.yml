@@ -91,7 +91,7 @@ jobs:
         with:
           apiToken: ${{ env.CF_TOKEN }}
           accountId: ${{ env.CF_ACCOUNT_ID }}
-          command: pages deploy dist/apps/${{ inputs.app-name }} --project-name=${{ inputs.app-name }}
+          command: pages deploy dist/${{ inputs.app-name }}/browser --project-name=${{ inputs.app-name }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ env.CF_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CF_ACCOUNT_ID }}
