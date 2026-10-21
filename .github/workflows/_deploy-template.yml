@@ -42,50 +42,46 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      # 2. Setup application environment config safely if the template exists
-      - name: Create environment configuration
-        run: |
-          ENV_EXAMPLE="apps/${{ inputs.app-name }}/src/environments/environment.example.ts"
-          ENV_FILE="apps/${{ inputs.app-name }}/src/environments/environment.ts"
-
-          if [ -f "$ENV_EXAMPLE" ]; then
-            cp "$ENV_EXAMPLE" "$ENV_FILE"
-            echo "Environment config created from template for ${{ inputs.app-name }}."
-          else
-            echo "No environment template found for ${{ inputs.app-name }}, skipping this step."
-          fi
-
-      # 3. Inject Carto API key into carto-config.ts if provided, or fall back to template
-      - name: Create carto configuration
-        run: |
-          CONFIG_DIR="libs/config/src"
-          mkdir -p "$CONFIG_DIR"
-
-          if [ -n "$CARTO_KEY" ]; then
-            # Generate config directly using the provided repository secret
-            echo "export const CARTO_API_KEY = '$CARTO_KEY';" > "$CONFIG_DIR/carto-config.ts"
-            echo "Carto config generated successfully from GitHub secret."
-          elif [ -f "$CONFIG_DIR/carto-config.example.ts" ]; then
-            # Fallback to template if no secret was passed but template exists
-            cp "$CONFIG_DIR/carto-config.example.ts" "$CONFIG_DIR/carto-config.ts"
-            echo "Carto config created from template file."
-          else
-            echo "No Carto config secret or template provided, skipping."
-          fi
-
-      # 4. Install dependencies using clean install
+      # 1. Install dependencies first so the environment is ready
       - name: Install dependencies
         run: npm ci
 
-      # 5. Run unit tests for the specific Nx app
+      # 2. Inject Carto API key into carto-config.ts if provided
+      - name: Create carto configuration
+        env:
+          CARTO_KEY: ${{ secrets.carto-api-key }}
+        run: |
+          CONFIG_DIR="./libs/config/src"
+          CONFIG_FILE="$CONFIG_DIR/carto-config.ts"
+
+          mkdir -p "$CONFIG_DIR"
+
+          if [ -n "$CARTO_KEY" ]; then
+            node -e '
+              const fs = require("node:fs");
+              const key = process.env.CARTO_KEY;
+              fs.writeFileSync(
+                "libs/config/src/carto-config.ts",
+                "export const CARTO_API_KEY = " +
+                  JSON.stringify(key) +
+                  ";\n"
+              );
+            '
+            echo "Carto configuration generated."
+          else
+            echo "::error::No Carto API key or example configuration found."
+            exit 1
+          fi
+
+      # 3. Run unit tests for the specific Nx app
       - name: Run unit tests
         run: npx nx test ${{ inputs.app-name }} --watch=false
 
-      # 6. Build the application for production
+      # 4. Build the application for production
       - name: Build application
         run: npx nx build ${{ inputs.app-name }}
 
-      # 7. Deploy compiled bundle to Cloudflare Pages via wrangler-action
+      # 5. Deploy compiled bundle to Cloudflare Pages via wrangler-action
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:

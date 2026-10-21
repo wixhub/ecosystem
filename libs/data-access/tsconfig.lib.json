@@ -6,7 +6,9 @@
     "declarationMap": true,
     "inlineSources": true,
     "types": [],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../../libs/config/src/carto-config.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

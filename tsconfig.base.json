@@ -5,7 +5,7 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "bundler",
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es2015",
@@ -15,10 +15,10 @@
     "skipDefaultLibCheck": true,
     "strict": false,
     "paths": {
-      "@es/ui": ["./libs/ui/src/index.ts"],
-      "@es/styles": ["./libs/styles/src/index.ts"],
+      "@es/config": ["./libs/config/src/index.ts"],
       "@es/data-access": ["./libs/data-access/src/index.ts"],
-      "@es/config": ["./libs/config/src/index.ts"]
+      "@es/styles": ["./libs/styles/src/index.ts"],
+      "@es/ui": ["./libs/ui/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]
