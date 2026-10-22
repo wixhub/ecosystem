@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 
 import { TrackingMapService, TrackingPoint } from '@es/data-access';
+import { CARTO_API_KEY } from '@es/config';
 
 @Component({
   selector: 'app-map-inspector',
@@ -78,7 +79,7 @@ export class MapInspector {
 
     const [latitude, longitude] = this.getInitialCenter(points);
 
-    this.mapService.initializeMap(containerId, [latitude, longitude], 10);
+    this.mapService.initializeMap(containerId, CARTO_API_KEY, [latitude, longitude], 10);
 
     this.isMapInitialized = true;
 
