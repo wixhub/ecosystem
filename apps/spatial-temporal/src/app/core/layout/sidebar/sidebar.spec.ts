@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { Sidebar } from './sidebar';
-import { MigrationService } from '../../../core/services/migration.service';
+import { MigrationService } from '@es/data-access';
 
 describe('Sidebar', () => {
   let component: Sidebar;

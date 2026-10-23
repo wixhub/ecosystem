@@ -1,13 +1,14 @@
+// Project: Spatial-Temporal Telemetry Visualization
+
 import { Service, signal, computed, inject, effect } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import {
   MigrationDataset,
   AnimalTrack,
   TelemetryPoint,
   PlaybackSpeed,
-} from '../models/telemetry.model';
+} from '../models/migration.model';
 
 @Service()
 export class MigrationService {
@@ -37,7 +38,7 @@ export class MigrationService {
   private readonly _selectedIndividualIds = signal<Set<string>>(new Set());
 
   private animationFrameId: number | null = null;
-  private lastTimestamp: number = 0;
+  private lastTimestamp = 0;
 
   // --- PUBLIC READONLY COMPUTED SIGNALS ---
   public readonly dataset = this._dataset.asReadonly();
@@ -263,7 +264,7 @@ export class MigrationService {
         sensorType: 'GPS',
       };
 
-      trackMap.get(individualId)!.points.push(point);
+      trackMap.get(individualId)?.points.push(point);
     }
 
     // Extended color palette for multiple individual tracks differentiation on map

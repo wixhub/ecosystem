@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { Timeline } from './timeline';
-import { MigrationService } from '../../core/services/migration.service';
+import { MigrationService } from '@es/data-access';
 
 describe('Timeline', () => {
   let component: Timeline;

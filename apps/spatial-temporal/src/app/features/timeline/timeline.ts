@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { MigrationService } from '../../core/services/migration.service';
-import { PlaybackSpeed } from '../../core/models/telemetry.model';
+import { PlaybackSpeed, MigrationService } from '@es/data-access';
 
 @Component({
   selector: 'app-timeline',

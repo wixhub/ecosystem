@@ -1,8 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import {
+  provideHttpClientTesting,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { MigrationService } from './migration.service';
-import { MigrationDataset } from '../models/telemetry.model';
+import { MigrationDataset } from '../models/migration.model';
 
 describe('MigrationService', () => {
   let service: MigrationService;
@@ -37,7 +40,11 @@ describe('MigrationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MigrationService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        MigrationService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
 
     httpMock = TestBed.inject(HttpTestingController);
@@ -71,7 +78,9 @@ describe('MigrationService', () => {
     }
 
     // Handle fallback request if triggered
-    const mockReqs = httpMock.match((req) => req.url.includes('telemetry-mock.json'));
+    const mockReqs = httpMock.match((req) =>
+      req.url.includes('telemetry-mock.json'),
+    );
     if (mockReqs.length > 0) {
       mockReqs[0].flush(mockDatasetResponse);
     }

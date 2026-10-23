@@ -1,3 +1,4 @@
+// Project: Spatial-Temporal Telemetry Visualization
 export interface TelemetryPoint {
   id: string;
   individualId: string;

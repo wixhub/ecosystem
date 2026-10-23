@@ -8,8 +8,7 @@ import {
   viewChild,
 } from '@angular/core';
 import * as L from 'leaflet';
-import { MigrationService } from '../../core/services/migration.service';
-import { AnimalTrack } from '../../core/models/telemetry.model';
+import { AnimalTrack, MigrationService } from '@es/data-access';
 import { CARTO_API_KEY } from '@es/config';
 
 @Component({
