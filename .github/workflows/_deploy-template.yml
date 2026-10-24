@@ -48,6 +48,7 @@ jobs:
 
       # 2. Inject Carto API key into carto-config.ts if provided
       - name: Create carto configuration
+        if: env.CARTO_KEY != ''
         env:
           CARTO_KEY: ${{ secrets.carto-api-key }}
         run: |
@@ -56,22 +57,17 @@ jobs:
 
           mkdir -p "$CONFIG_DIR"
 
-          if [ -n "$CARTO_KEY" ]; then
-            node -e '
-              const fs = require("node:fs");
-              const key = process.env.CARTO_KEY;
-              fs.writeFileSync(
-                "libs/config/src/carto-config.ts",
-                "export const CARTO_API_KEY = " +
-                  JSON.stringify(key) +
-                  ";\n"
-              );
-            '
-            echo "Carto configuration generated."
-          else
-            echo "::error::No Carto API key or example configuration found."
-            exit 1
-          fi
+          node -e '
+            const fs = require("node:fs");
+            const key = process.env.CARTO_KEY;
+            fs.writeFileSync(
+              "libs/config/src/carto-config.ts",
+              "export const CARTO_API_KEY = " +
+                JSON.stringify(key) +
+                ";\n"
+            );
+          '
+          echo "Carto configuration generated."
 
       # 3. Run unit tests for the specific Nx app
       - name: Run unit tests
