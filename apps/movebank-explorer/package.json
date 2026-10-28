@@ -1,5 +1,5 @@
 {
-  "name": "movebank-explorer-web",
+  "name": "movebank-explorer",
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
