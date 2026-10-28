@@ -1,0 +1,117 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  # Job 1: Analyze the monorepo and determine affected applications safely
+  analyze:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.set-matrix.outputs.apps }}
+    steps:
+      - name: Checkout repository with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for Nx to compare git commits and build the dependency graph
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Detect affected apps and filter them strictly against the 7 target production applications
+      - name: Detect and filter affected applications
+        id: set-matrix
+        env:
+          ALLOWED_APPS: '["bio-stream", "data-curation", "eco-spec", "metadata-harvester", "movebank-explorer", "sensor-streams", "spatial-temporal"]'
+        run: |
+          # Get affected projects from Nx in JSON format
+          AFFECTED_JSON=$(npx nx show projects --affected --base=origin/main --head=HEAD --json)
+
+          # Intersect Nx affected projects with the allowed whitelist using Node.js
+          FILTERED_APPS=$(AFFECTED_JSON="$AFFECTED_JSON" node -e '
+            const allowed = JSON.parse(process.env.ALLOWED_APPS);
+            const affected = JSON.parse(process.env.AFFECTED_JSON);
+            const result = affected.filter(app => allowed.includes(app));
+            console.log(JSON.stringify(result));
+          ')
+
+          echo "Filtered affected apps: $FILTERED_APPS"
+          echo "apps=$FILTERED_APPS" >> $GITHUB_OUTPUT
+
+  # Job 2: Build, test, and deploy dynamically using a matrix strategy for affected apps
+  build-test-deploy:
+    needs: analyze
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: ${{ fromJson(needs.analyze.outputs.apps) }}
+
+    # Map workflow secrets to job-level environment variables
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CARTO_KEY: ${{ secrets.CARTO_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Conditionally inject Carto API key configuration if the secret is available and app requires it
+      - name: Create carto configuration
+        if: |
+          contains(fromJSON('["bio-stream", "data-curation", "spatial-temporal"]'), matrix.app) && 
+          env.CARTO_KEY != ''
+        run: |
+          CONFIG_DIR="./libs/config/src"
+          mkdir -p "$CONFIG_DIR"
+          node -e '
+            const fs = require("node:fs");
+            const key = process.env.CARTO_KEY;
+            fs.writeFileSync(
+              "libs/config/src/carto-config.ts",
+              "export const CARTO_API_KEY = " + JSON.stringify(key) + ";\n"
+            );
+          '
+          echo "Carto configuration generated successfully for ${{ matrix.app }}."
+
+      # Run static code analysis (linter) for the specific affected app
+      - name: Run lint
+        run: npx nx lint ${{ matrix.app }}
+
+      # Run unit tests in headless mode for the specific affected app
+      - name: Run unit tests
+        run: npx nx test ${{ matrix.app }} --watch=false
+
+      # Build the application production bundle
+      - name: Build application
+        run: npx nx build ${{ matrix.app }}
+
+      # Automatically deploy to Cloudflare Pages only on push to main branch
+      - name: Deploy to Cloudflare Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ env.CF_TOKEN }}
+          accountId: ${{ env.CF_ACCOUNT_ID }}
+          command: pages deploy apps/${{ matrix.app }}/dist/${{ matrix.app }}/browser --project-name=${{ matrix.app }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ env.CF_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ env.CF_ACCOUNT_ID }}

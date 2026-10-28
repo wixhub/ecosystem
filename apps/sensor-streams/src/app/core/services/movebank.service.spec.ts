@@ -62,7 +62,9 @@ describe('MovebankService', () => {
     let errorOccurred = false;
 
     service.fetchSensorData('invalid_id', 10).subscribe({
-      next: () => {},
+      next: () => {
+        /* empty */
+      },
       error: (err) => {
         errorOccurred = true;
         expect(err).toBeTruthy();
