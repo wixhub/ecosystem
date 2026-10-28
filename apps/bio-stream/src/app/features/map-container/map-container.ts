@@ -8,6 +8,7 @@ import {
 } from '@es/data-access';
 import { TelemetryAnalytics } from '../telemetry-analytics/telemetry-analytics';
 import { TelemetryFilters } from '../telemetry-filters/telemetry-filters';
+import { CARTO_API_KEY } from '@es/config';
 
 @Component({
   selector: 'app-map-container',
@@ -120,7 +121,7 @@ export class MapContainer implements AfterViewInit {
    * Initializes the map after the component view has been created.
    */
   public ngAfterViewInit(): void {
-    this.mapService.initializeMap('leaflet-spatial-canvas', [15.0, 10.0], 3);
+    this.mapService.initializeMap('leaflet-spatial-canvas', CARTO_API_KEY, [15.0, 10.0], 3);
 
     // Start with the default active albatrosses study.
     this.telemetryService.setStudyId('2911040');

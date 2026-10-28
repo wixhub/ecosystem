@@ -44,7 +44,9 @@ export class SensorChart implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    /* empty */
+  }
 
   ngOnDestroy(): void {
     if (this.chartInstance) {

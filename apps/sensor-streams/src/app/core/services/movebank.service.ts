@@ -16,7 +16,7 @@ export class MovebankService {
    */
   public fetchSensorData(
     studyId: string,
-    limit: number = 1000,
+    limit = 1000,
   ): Observable<SensorDataPoint[] | null> {
     let params = new HttpParams().set('entity_type', 'event').set('i_can_see_data', 'true');
 

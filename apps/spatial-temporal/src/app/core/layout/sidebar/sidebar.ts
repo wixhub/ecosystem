@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { MigrationService } from '../../services/migration.service';
+import { MigrationService } from '@es/data-access';
 
 @Component({
   selector: 'app-sidebar',

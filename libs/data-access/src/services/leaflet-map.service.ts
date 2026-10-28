@@ -1,8 +1,5 @@
 import { DestroyRef, inject } from '@angular/core';
-
 import * as L from 'leaflet';
-
-import { CARTO_API_KEY } from '@es/config';
 
 export abstract class LeafletMapService {
   protected mapInstance: L.Map | null = null;
@@ -23,6 +20,7 @@ export abstract class LeafletMapService {
    */
   public initializeMap(
     containerId: string,
+    cartoApiKey: string,
     initialCenter: [number, number] = [20, 0],
     zoom = 3,
   ): void {
@@ -36,7 +34,7 @@ export abstract class LeafletMapService {
     }).setView(initialCenter, zoom);
 
     L.tileLayer(
-      `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`,
+      `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`,
       {
         attribution: '&copy; CARTO',
         maxZoom: 19,

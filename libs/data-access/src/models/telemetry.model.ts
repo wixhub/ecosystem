@@ -1,4 +1,9 @@
-export type SpeciesType = 'AVIAN_MIGRATORY' | 'MARINE_CETACEAN' | 'TERRESTRIAL_UNGULATE';
+// Project bio-stream
+
+export type SpeciesType =
+  | 'AVIAN_MIGRATORY'
+  | 'MARINE_CETACEAN'
+  | 'TERRESTRIAL_UNGULATE';
 
 export interface GeoCoordinates {
   readonly lat: number;

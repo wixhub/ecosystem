@@ -60,7 +60,9 @@ describe('SupportMailService', () => {
 
     // Simulate a rejected clipboard write promise
     vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValueOnce(new Error('Clipboard error'));
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      /* empty */
+    });
 
     const result = await service.handleContact(mockEvent);
 

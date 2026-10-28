@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "movebank-explorer-web": {
+    "movebank-explorer": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -59,10 +59,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "movebank-explorer-web:build:production"
+              "buildTarget": "movebank-explorer:build:production"
             },
             "development": {
-              "buildTarget": "movebank-explorer-web:build:development"
+              "buildTarget": "movebank-explorer:build:development"
             }
           },
           "defaultConfiguration": "development"

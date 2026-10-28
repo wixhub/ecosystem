@@ -11,8 +11,8 @@ import { Footer, Header } from '@es/ui';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
-  // Inject tracking state service for centralized data management
-  readonly stateService = inject(TrackingStateService);
+  // Explicitly typed injected service to resolve template type checking errors
+  public readonly stateService = inject(TrackingStateService);
 
   // Handle individual filter change from native select element event
   onIndividualChange(event: Event): void {

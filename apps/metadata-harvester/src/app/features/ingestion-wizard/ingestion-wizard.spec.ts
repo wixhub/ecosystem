@@ -9,8 +9,12 @@ describe('IngestionWizard', () => {
 
   // Mock implementation of MetadataApiService
   const mockMetadataApiService = {
-    refresh: () => {},
-    uploadDataset: () => {},
+    refresh: () => {
+      /* empty */
+    },
+    uploadDataset: () => {
+      /* empty */
+    },
   };
 
   beforeEach(async () => {
