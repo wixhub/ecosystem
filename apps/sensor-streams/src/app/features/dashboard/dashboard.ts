@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MovebankService } from '../../core/services/movebank.service';
+import { MovebankService } from '@es/data-access';
 import { StatCard } from '../stat-card/stat-card';
 import { SensorChart } from '../sensor-chart/sensor-chart';
 import { SlicePipe } from '@angular/common';
