@@ -9,7 +9,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import { SensorDataPoint } from '../../core/models/sensor.model';
+import { SensorDataPoint } from '@es/data-access';
 
 Chart.register(...registerables);
 
