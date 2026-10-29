@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { MetricSummary } from '../../core/models/sensor.model';
+import { MetricSummary } from '@es/data-access';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
