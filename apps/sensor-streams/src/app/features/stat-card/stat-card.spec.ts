@@ -1,7 +1,8 @@
-import { Component, input } from '@angular/core';
+/// <reference types="vitest/globals" />
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatCard } from './stat-card';
-import { MetricSummary } from '../../core/models/sensor.model';
+import { MetricSummary } from '@es/data-access';
 
 describe('StatCard', () => {
   let fixture: ComponentFixture<StatCard>;

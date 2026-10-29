@@ -2,7 +2,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { Dashboard } from './dashboard';
-import { MovebankService } from '../../core/services/movebank.service';
+import { MovebankService } from '@es/data-access';
 import { of, throwError } from 'rxjs';
 
 describe('Dashboard', () => {

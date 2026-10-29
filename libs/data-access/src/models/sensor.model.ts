@@ -1,3 +1,4 @@
+// Project: Sensor Streams
 export interface SensorDataPoint {
   timestamp: string;
   latitude: number;
