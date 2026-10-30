@@ -1,9 +1,11 @@
+export * from './models/dataset.model';
 export * from './models/migration.model';
 export * from './models/sensor.model';
 export * from './models/telemetry.model';
 export * from './models/tracking.model';
 
 export * from './services/database.service';
+export * from './services/dataset.service';
 export * from './services/geospatial-qc.engine';
 
 export * from './services/leaflet-map.service';
