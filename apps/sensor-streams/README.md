@@ -2,6 +2,8 @@
 
 A production-grade scientific dashboard designed for visualizing complex multi-dimensional animal tracking and environmental telemetry streams sourced from **Movebank**. Built using **Angular 22** featuring native Signals, stable Zoneless architecture, and modern reactive forms.
 
+This app is a part of the [@ecosystem](../../README.md) monorepo.
+
 ![Multi-Dimensional Sensor Streams Dashboard](image.png)
 
 ## 🚀 Live Demo
@@ -55,72 +57,53 @@ sensor-streams/
 └── README.md
 ```
 
-## Getting Started
+## 🛠️ Getting Started
 
-### Prerequisites
+For installation instructions and prerequisites, see the **Getting Started** section of [@ecosystem](../../README.md).
 
-- Node.js (v22+ recommended)
-- Angular CLI 22+
+## Development
 
-### Installation & Run
-
-```bash
-# Clone repository
-git clone https://github.com/wixhub/sensor-streams.git
-
-cd sensor-streams
-
-# Install dependencies
-npm install
-
-# Run development server
-ng serve
-```
-
-Navigate to http://localhost:4200/. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+To run this application locally for development, use the Nx task runner from the repository root:
 
 ```bash
-ng generate component component-name
+# Run development server with live reload
+npx nx serve sensor-streams
+
+# Or run it with a specific configuration
+npx nx serve sensor-streams --configuration=production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Build
+
+To build the production bundle for this specific application:
 
 ```bash
-ng generate --help
+npx nx build sensor-streams
 ```
 
-## Building
-
-To build the project run:
+## Testing
 
 ```bash
-ng build
+# Run unit tests
+npx nx test sensor-streams
+
+# Run lint checks
+npx nx lint sensor-streams
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🤝 Contributing
 
-## Running unit tests
+Contributions, issues and feature requests are welcome! Feel free to check the [issues page](hhttps://github.com/wixhub/ecosystem/issues).
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 📬 Contact & Support
 
-```bash
-ng test
-```
+If you have any questions, suggestions, or feedback regarding this project, feel free to reach out:
 
-## Running end-to-end tests
+- **Author:** [@wixhub](https://github.com/wixhub)
+- **Telegram:** [@typeweb](https://t.me/typeweb)
 
-For end-to-end (e2e) testing, run:
+## 📄 License
 
-```bash
-ng e2e
-```
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- This project is open-source and available under the [**MIT License**](../../LICENSE).
