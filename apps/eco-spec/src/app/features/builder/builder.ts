@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { BuilderService } from '../../core/services/builder.service';
+import { BuilderService } from '@es/data-access';
 import { UpperCasePipe } from '@angular/common';
 
 @Component({
