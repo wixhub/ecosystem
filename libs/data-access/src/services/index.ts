@@ -1,3 +1,5 @@
+export * from './builder.service';
+
 export * from './database.service';
 export * from './dataset.service';
 

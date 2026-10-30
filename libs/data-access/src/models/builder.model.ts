@@ -1,3 +1,5 @@
+// Project eco-spec
+
 export type MovebankEntity = 'study' | 'individual' | 'tag' | 'deployment' | 'event';
 export type ControlType = 'text' | 'number' | 'integer' | 'boolean' | 'select' | 'date';
 

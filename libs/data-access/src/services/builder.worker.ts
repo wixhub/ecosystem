@@ -1,4 +1,5 @@
 /// <reference lib="webworker" />
+// Project eco-spec
 
 addEventListener('message', ({ data }) => {
   const { samplingFrequency, deploymentDays, packetSize } = data;

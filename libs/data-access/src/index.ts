@@ -1,8 +1,13 @@
+export * from './models/builder.config';
+
+export * from './models/builder.model';
 export * from './models/dataset.model';
 export * from './models/migration.model';
 export * from './models/sensor.model';
 export * from './models/telemetry.model';
 export * from './models/tracking.model';
+
+export * from './services/builder.service';
 
 export * from './services/database.service';
 export * from './services/dataset.service';
