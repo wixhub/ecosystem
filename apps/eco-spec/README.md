@@ -2,6 +2,8 @@
 
 High-performance, responsive and maintainable ecological specification tool built for scientific research using modern Angular standards. Designed with a modular architecture, reactive signals and zero legacy bloat.
 
+This app is a part of the [@ecosystem](../../README.md) monorepo.
+
 ## Key Features
 
 - Guided Multi-Step Wizard: Traverses the core Movebank entity hierarchy sequentially: study, individual, tag, deployment, and event.
@@ -42,64 +44,53 @@ src/
         └── builder/        # Wizard UI component, templates and adaptive styling
 ```
 
-## Development server
+## 🛠️ Getting Started
 
-To start a local development server, run:
+For installation instructions and prerequisites, see the **Getting Started** section of [@ecosystem](../../README.md).
 
-```bash
-ng serve
-```
+## Development
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+To run this application locally for development, use the Nx task runner from the repository root:
 
 ```bash
-ng generate component component-name
+# Run development server with live reload
+npx nx serve eco-spec
+
+# Or run it with a specific configuration
+npx nx serve eco-spec --configuration=production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Build
+
+To build the production bundle for this specific application:
 
 ```bash
-ng generate --help
+npx nx build eco-spec
 ```
 
-## Building
-
-To build the project run:
+## Testing
 
 ```bash
-ng build
+# Run unit tests
+npx nx test eco-spec
+
+# Run lint checks
+npx nx lint eco-spec
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🤝 Contributing
 
-## Running unit tests
+Contributions, issues and feature requests are welcome! Feel free to check the [issues page](hhttps://github.com/wixhub/ecosystem/issues).
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 📬 Contact & Support
 
-```bash
-ng test
-```
+If you have any questions, suggestions, or feedback regarding this project, feel free to reach out:
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Author:** [@wixhub](https://github.com/wixhub)
+- **Telegram:** [@typeweb](https://t.me/typeweb)
 
 ## 📄 License
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- This project is open-source and available under the [MIT License](./LICENSE).
+- This project is open-source and available under the [**MIT License**](../../LICENSE).
