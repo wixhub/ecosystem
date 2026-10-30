@@ -2,8 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ApplicationRef } from '@angular/core';
 import { of, throwError } from 'rxjs';
 import { DatasetCatalog } from './dataset-catalog';
-import { DatasetService } from '../../core/services/dataset.service';
-import { Dataset } from '../../core/models/dataset.model';
+import { Dataset, DatasetService } from '@es/data-access';
 
 describe('DatasetCatalog', () => {
   let serviceMock: {
