@@ -2,13 +2,11 @@
 
 The spatial rendering engine for migratory animal tracking data, engineered for ecological metadata management and reactive spatial filtering. A high-performance Angular dashboard designed to visualize biological telemetry data from the **Movebank API**, built as a reactive, user-friendly replacement for legacy tracking interfaces.
 
----
+This app is a part of the [@ecosystem](../../README.md) monorepo.
 
 ## 🏛️ Architecture Overview
 
 The application is built as an enterprise-grade Angular single-page application leveraging architecture (Signals, RxJS and standalone components) alongside Leaflet for spatial mapping. It utilizes zoneless change detection to maximize frame-rate performance for high-frequency Leaflet GIS canvas rendering and real-time telemetry streaming.
-
----
 
 ## ⚡ Key Technical Pillars
 
@@ -18,15 +16,11 @@ The application is built as an enterprise-grade Angular single-page application 
 
 - **GIS Map Encapsulation**: Decoupled Leaflet integration managed via enterprise services with rigorous `DestroyRef` memory cleanup lifecycles.
 
----
-
 ## 🚀 Live Demo
 
 🔗 **[View Live Application on Cloudflare Pages](https://bio-stream.pages.dev)**
 
 ![bio-stream-ui](image.png)
-
----
 
 ## 🌐 Data Source & Backend Proxy
 
@@ -35,8 +29,6 @@ The application is built as an enterprise-grade Angular single-page application 
 - **Backend Endpoint**: 🔗 **[View Worker on Cloudflare Workers](https://wispy-surf-c9db.rublin.workers.dev/)**
 
 - **Data Attribution**: Telemetry data is accessed via the **[Movebank API](www.movebank.org)** and provided by individual study contributors. Map tiles are powered by **CARTO** under CC BY 3.0, utilizing data from **OpenStreetMap** contributors.
-
----
 
 ## 🌟 Key Features
 
@@ -49,8 +41,6 @@ The application is built as an enterprise-grade Angular single-page application 
 - **Robust Error Handling & Fallbacks**: Automated fallback mechanisms if upstream Movebank API requests experience timeouts or rate limits (HTTP 522 Cloudflare errors).
 
 - **Advanced Filtering & Analytics**: Filter streams dynamically by species classifications (`AVIAN_MIGRATORY`, `MARINE_CETACEAN`, `TERRESTRIAL_UNGULATE`) and physiological thresholds (Heart Rate ranges).
-
----
 
 ## 🛠️ Core Services & Components
 
@@ -69,12 +59,6 @@ bio-stream/
     │ └── telemetry-mock.json
     ├── src/
     │ ├── app/
-    │ │ ├── core/
-    │ │ │ ├── models/
-    │ │ │ │ └── telemetry.model.ts
-    │ │ │ └── services/
-    │ │ │ ├── leaflet-map.service.ts
-    │ │ │ └── telemetry-stream.service.ts
     │ │ ├── features/
     │ │ │ ├── map-container/
     │ │ │ │ ├── map-container.component.ts
@@ -98,113 +82,75 @@ bio-stream/
     └── README.md
 ```
 
-## Getting Started
+## 🛠️ Getting Started
 
-Prerequisites
-
-- Node.js (v20+ recommended)
-- Angular CLI (v22+)
-
-## Installation & Development
-
-Clone the repository and install dependencies:
-
-```bash
-git clone https://github.com/wixhub/bio-stream.git
-cd bio-stream
-npm install
-```
+For installation instructions and prerequisites, see the **Getting Started** section of [@ecosystem](../../README.md).
 
 ## ⚙️ Configuration & Environment
 
 To run this application locally, you need to provide configuration keys for map tiles [CARTO](https://carto.com/basemaps/apikey/).
 
-1. Copy the example environment configuration file located in `src/environments/`:
+1. Copy the example environment configuration file located in `libs/config/src/`:
 
 ```bash
-cp src/environments/environment.example.ts src/environments/environment.ts
+cp libs/config/src/carto.config.example.ts libs/config/src/carto.config.ts
 ```
 
-2. Open src/environments/environment.ts and insert your personal CARTO API key:
+2. Open `libs/config/src/carto.config.ts` and insert your personal CARTO API key:
 
 ```typescript
-export const environment = {
-  production: true,
-  cartoApiKey: 'YOUR_CARTO_API_KEY',
-};
+export const CARTO_API_KEY = 'YOUR_CARTO_API_KEY';
 ```
 
 > [!NOTE]
-> `environment.ts` is ignored by Git to keep API keys secure, while `environment.example.ts` serves as the public template.
+> `carto.config.ts` is ignored by Git to keep API keys secure, while `carto.config.example.ts` serves as the public template.
 
-## Development server
+## Development
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+To run this application locally for development, use the Nx task runner from the repository root:
 
 ```bash
-ng generate component component-name
+# Run development server with live reload
+npx nx serve bio-stream
+
+# Or run it with a specific configuration
+npx nx serve bio-stream --configuration=production
 ```
 
-For a complete list of available schematics (such as `components`, `directives` or `pipes`), run:
+## Build
+
+To build the production bundle for this specific application:
 
 ```bash
-ng generate --help
+npx nx build bio-stream
 ```
 
-## Building
-
-To build the project run:
+## Testing
 
 ```bash
-ng build
+# Run unit tests
+npx nx test bio-stream
+
+# Run lint checks
+npx nx lint bio-stream
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🤝 Contributing
 
-## 🧪 Testing Suite
+Contributions, issues and feature requests are welcome! Feel free to check the [issues page](hhttps://github.com/wixhub/ecosystem/issues).
 
-The application features comprehensive unit test coverage written for **Vitest** with mocked dependencies for Leaflet and HttpClient (`provideHttpClientTesting`).
+## 📬 Contact & Support
 
-## Running unit tests
+If you have any questions, suggestions, or feedback regarding this project, feel free to reach out:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-# or using vitest directly
-npm run test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Author:** [@wixhub](https://github.com/wixhub)
+- **Telegram:** [@typeweb](https://t.me/typeweb)
 
 ## ⚖️ License & Attribution
 
-- **Software License**: This project is open-source software licensed under the **[MIT License](./LICENSE)**.
+- **Software License**: This project is open-source software licensed under the [**MIT License**](../../LICENSE).
 
 - **Data & Map Attribution**:
+  - Animal tracking data provided by [**Movebank**](www.movebank.org) and individual researchers.
 
-  - Animal tracking data provided by **[Movebank](www.movebank.org)** and individual researchers.
-
-  - Map tiles by **CARTO**, under CC BY 3.0. Data by **OpenStreetMap** contributors.
+  - Map tiles by [**CARTO**](https://carto.com/), under CC BY 3.0. Data by **OpenStreetMap** contributors.
