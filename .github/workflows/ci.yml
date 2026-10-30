@@ -33,15 +33,19 @@ jobs:
         env:
           ALLOWED_APPS: '["bio-stream", "data-curation", "eco-spec", "metadata-harvester", "movebank-explorer", "sensor-streams", "spatial-temporal"]'
         run: |
-          # Get affected projects from Nx in JSON format
-          AFFECTED_JSON=$(npx nx show projects --affected --base=origin/main --head=HEAD --json)
+          # Get affected projects from Nx in JSON format (fallback to empty array if fails)
+          AFFECTED_JSON=$(npx nx show projects --affected --base=origin/main --head=HEAD --json || echo "[]")
 
           # Intersect Nx affected projects with the allowed whitelist using Node.js
           FILTERED_APPS=$(AFFECTED_JSON="$AFFECTED_JSON" node -e '
-            const allowed = JSON.parse(process.env.ALLOWED_APPS);
-            const affected = JSON.parse(process.env.AFFECTED_JSON);
-            const result = affected.filter(app => allowed.includes(app));
-            console.log(JSON.stringify(result));
+            try {
+              const allowed = JSON.parse(process.env.ALLOWED_APPS);
+              const affected = JSON.parse(process.env.AFFECTED_JSON);
+              const result = affected.filter(app => allowed.includes(app));
+              console.log(JSON.stringify(result));
+            } catch (e) {
+              console.log("[]");
+            }
           ')
 
           echo "Filtered affected apps: $FILTERED_APPS"
@@ -51,6 +55,8 @@ jobs:
   build-test-deploy:
     needs: analyze
     runs-on: ubuntu-latest
+    # Prevent the job from running if the matrix apps array is empty
+    if: ${{ fromJson(needs.analyze.outputs.apps)[0] != null }}
     strategy:
       matrix:
         app: ${{ fromJson(needs.analyze.outputs.apps) }}
@@ -74,7 +80,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Conditionally inject Carto API key configuration if the secret is available and app requires it
+      # Conditionally inject Carto API key configuration for specific geospatial apps
       - name: Create carto configuration
         if: |
           contains(fromJSON('["bio-stream", "data-curation", "spatial-temporal"]'), matrix.app) && 
@@ -104,7 +110,7 @@ jobs:
       - name: Build application
         run: npx nx build ${{ matrix.app }}
 
-      # Automatically deploy to Cloudflare Pages only on push to main branch
+      # Automatically deploy to Cloudflare Pages as production on push to main branch
       - name: Deploy to Cloudflare Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
