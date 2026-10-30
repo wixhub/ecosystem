@@ -6,6 +6,8 @@
 
 A high-performance scientific web application built with Angular 22 (with Signals), TypeScript, Leaflet.js and SCSS for interactive playback and visualization of animal migration telemetry over geographical map layers.
 
+This app is a part of the [@ecosystem](../../README.md) monorepo.
+
 ## 🚀 Live Demo
 
 🔗 **[View Live Application on Cloudflare Pages](https://spatial-temporal.pages.dev)**
@@ -67,111 +69,75 @@ src/
 
 - **Build Tool**: Angular CLI
 
-## ⚙️ Getting Started
+## 🛠️ Getting Started
 
-Prerequisites:
-
-- Node.js (v24.15.0 recommended)
-- npm or yarn
-
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/wixhub/spatial-temporal.git
-cd spatial-temporal
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
+For installation instructions and prerequisites, see the **Getting Started** section of [@ecosystem](../../README.md).
 
 ## ⚙️ Configuration & Environment
 
 To run this application locally, you need to provide configuration keys for map tiles [CARTO](https://carto.com/basemaps/apikey/).
 
-1. Copy the example environment configuration file located in `src/environments/`:
+1. Copy the example environment configuration file located in `libs/config/src/`:
 
 ```bash
-cp src/environments/environment.example.ts src/environments/environment.ts
+cp libs/config/src/carto.config.example.ts libs/config/src/carto.config.ts
 ```
 
-2. Open src/environments/environment.ts and insert your personal CARTO API key:
+2. Open `libs/config/src/carto.config.ts` and insert your personal CARTO API key:
 
 ```typescript
-export const environment = {
-  production: true,
-  cartoApiKey: 'YOUR_CARTO_API_KEY',
-};
+export const CARTO_API_KEY = 'YOUR_CARTO_API_KEY';
 ```
 
 > [!NOTE]
-> `environment.ts` is ignored by Git to keep API keys secure, while `environment.example.ts` serves as the public template.
+> `carto.config.ts` is ignored by Git to keep API keys secure, while `carto.config.example.ts` serves as the public template.
 
-## Development server
+## Development
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+To run this application locally for development, use the Nx task runner from the repository root:
 
 ```bash
-ng generate component component-name
+# Run development server with live reload
+npx nx serve spatial-temporal
+
+# Or run it with a specific configuration
+npx nx serve spatial-temporal --configuration=production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Build
+
+To build the production bundle for this specific application:
 
 ```bash
-ng generate --help
+npx nx build spatial-temporal
 ```
 
-## Building
-
-To build the project run:
+## Testing
 
 ```bash
-ng build
+# Run unit tests
+npx nx test spatial-temporal
+
+# Run lint checks
+npx nx lint spatial-temporal
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🤝 Contributing
 
-## Running unit tests
+Contributions, issues and feature requests are welcome! Feel free to check the [issues page](hhttps://github.com/wixhub/ecosystem/issues).
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 📬 Contact & Support
 
-```bash
-ng test
-```
+If you have any questions, suggestions, or feedback regarding this project, feel free to reach out:
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Author:** [@wixhub](https://github.com/wixhub)
+- **Telegram:** [@typeweb](https://t.me/typeweb)
 
 ## 📜 License
 
-- **Software License**: This project is open-source software licensed under the **[MIT License](./LICENSE)**.
+- **Software License**: This project is open-source software licensed under the [**MIT License**](./LICENSE).
 
 - **Data & Map Attribution**:
-  - Animal tracking data provided by **[Movebank](www.movebank.org)** and individual researchers.
+  - Animal tracking data provided by [**Movebank**](www.movebank.org) and individual researchers.
 
-  - Map tiles by **CARTO**, under CC BY 3.0. Data by **OpenStreetMap** contributors.
+  - Map tiles by [**CARTO**](https://carto.com/), under CC BY 3.0. Data by **OpenStreetMap** contributors.
