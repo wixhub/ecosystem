@@ -111,7 +111,7 @@ jobs:
         with:
           apiToken: ${{ env.CF_TOKEN }}
           accountId: ${{ env.CF_ACCOUNT_ID }}
-          command: pages deploy apps/${{ matrix.app }}/dist/${{ matrix.app }}/browser --project-name=${{ matrix.app }}
+          command: pages deploy apps/${{ matrix.app }}/dist/${{ matrix.app }}/browser --project-name=${{ matrix.app }} --branch=main
         env:
           CLOUDFLARE_API_TOKEN: ${{ env.CF_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ env.CF_ACCOUNT_ID }}
