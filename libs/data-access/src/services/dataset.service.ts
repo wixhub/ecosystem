@@ -1,3 +1,4 @@
+// Project movebank-explorer
 import { Service, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, map, catchError } from 'rxjs';

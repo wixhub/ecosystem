@@ -1,8 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of, map, catchError } from 'rxjs';
-import { DatasetService } from '../../core/services/dataset.service';
-import { Dataset } from '../../core/models/dataset.model';
+import { DatasetService } from '@es/data-access';
 import { Footer } from '../../core/layout/footer/footer';
 
 @Component({
