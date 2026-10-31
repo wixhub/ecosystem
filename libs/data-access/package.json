@@ -1,9 +1,12 @@
 {
-  "name": "@e/data-access",
+  "name": "@es/data-access",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^22.1.0",
-    "@angular/core": "^22.1.0"
+    "@angular/core": "^22.1.0",
+    "dexie": "^4.4.6",
+    "rxjs": "~7.8.0",
+    "leaflet": "^1.9.4"
   },
   "sideEffects": false
 }

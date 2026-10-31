@@ -17,6 +17,7 @@
       "executor": "@nx/angular:package",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "defaultConfiguration": "production",
+      "dependsOn": ["^build"],
       "options": {
         "project": "libs/data-access/ng-package.json",
         "tsConfig": "libs/data-access/tsconfig.lib.json"
