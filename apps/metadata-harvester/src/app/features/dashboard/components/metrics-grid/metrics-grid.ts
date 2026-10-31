@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { CardType } from '../../../../core/models/metadata.model';
+import { CardType } from '@es/data-access';
 
 @Component({
   selector: 'app-metrics-grid',
