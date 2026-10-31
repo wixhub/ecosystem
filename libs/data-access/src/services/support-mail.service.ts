@@ -1,3 +1,5 @@
+// Project metadata-harvester
+
 import { Service } from '@angular/core';
 
 @Service()
