@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { IngestionWizard } from './ingestion-wizard';
-import { MetadataApiService } from '../../core/services/metadata-api.service';
+import { MetadataApiService } from '@es/data-access';
 
 describe('IngestionWizard', () => {
   let component: IngestionWizard;
