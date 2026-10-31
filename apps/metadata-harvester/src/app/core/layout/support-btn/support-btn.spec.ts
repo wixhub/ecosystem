@@ -1,5 +1,5 @@
 import { SupportBtn } from './support-btn';
-import { SupportMailService } from '../../services/support-mail.service';
+import { SupportMailService } from '@es/data-access';
 import { Injector, runInInjectionContext } from '@angular/core';
 
 describe('SupportBtn', () => {

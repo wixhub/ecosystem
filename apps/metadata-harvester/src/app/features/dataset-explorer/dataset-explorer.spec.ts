@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { DatasetExplorer } from './dataset-explorer';
-import { MetadataApiService } from '../../core/services/metadata-api.service';
+import { MetadataApiService } from '@es/data-access';
 import { signal } from '@angular/core';
 
 describe('DatasetExplorer', () => {

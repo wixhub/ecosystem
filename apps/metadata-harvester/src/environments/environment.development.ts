@@ -1,4 +1,3 @@
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080/api/v1', // Local development backend URL
-};
+import { defaultDevConfig } from '@es/config';
+
+export const environment = defaultDevConfig;

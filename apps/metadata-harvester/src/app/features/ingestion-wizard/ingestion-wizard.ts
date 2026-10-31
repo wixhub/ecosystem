@@ -1,9 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpEventType } from '@angular/common/http';
-import { MetadataApiService } from '../../core/services/metadata-api.service';
-import { MetadataFormat } from '../../core/models/metadata.model';
+import { MetadataFormat, MetadataApiService } from '@es/data-access';
 
 @Component({
   selector: 'app-ingestion-wizard',

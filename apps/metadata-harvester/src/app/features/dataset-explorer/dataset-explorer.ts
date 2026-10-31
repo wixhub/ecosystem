@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MetadataApiService } from '../../core/services/metadata-api.service';
+import { MetadataApiService } from '@es/data-access';
 
 @Component({
   selector: 'app-dataset-explorer',
