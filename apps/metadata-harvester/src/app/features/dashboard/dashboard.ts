@@ -1,13 +1,12 @@
 import { Component, computed, inject, OnInit, signal, ViewChild, effect } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MetadataApiService } from '../../core/services/metadata-api.service';
+import { CardType, MetadataApiService } from '@es/data-access';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Loader } from '../../core/layout/loader/loader';
-import { MetricsGrid } from './components/metrics-grid/metrics-grid';
-import { CardType } from '../../core/models/metadata.model';
 import { Footer } from '../../core/layout/footer/footer';
+import { MetricsGrid } from './components/metrics-grid/metrics-grid';
 
 @Component({
   selector: 'app-dashboard',
