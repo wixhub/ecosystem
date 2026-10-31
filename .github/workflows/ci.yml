@@ -92,7 +92,7 @@ jobs:
             const fs = require("node:fs");
             const key = process.env.CARTO_KEY;
             fs.writeFileSync(
-              "libs/config/src/carto-config.ts",
+              "libs/config/src/carto.config.ts",
               "export const CARTO_API_KEY = " + JSON.stringify(key) + ";\n"
             );
           '
