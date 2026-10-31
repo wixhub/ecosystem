@@ -1,4 +1,3 @@
-export const environment = {
-  production: true,
-  apiUrl: 'https://metadata-harvester-backend.onrender.com/api/v1', // Render BE
-};
+import { defaultProdConfig } from '@es/config';
+
+export const environment = defaultProdConfig;
