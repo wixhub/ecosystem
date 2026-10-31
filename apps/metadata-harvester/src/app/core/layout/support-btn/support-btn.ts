@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { SupportMailService } from '../../services/support-mail.service';
+import { SupportMailService } from '@es/data-access';
 
 @Component({
   selector: 'app-support-btn',
