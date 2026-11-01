@@ -33,6 +33,7 @@
     },
     "@angular/build:unit-test": {
       "cache": true,
+      "dependsOn": ["^build"],
       "inputs": ["default", "^production"]
     },
     "@nx/angular:package": {
@@ -42,7 +43,13 @@
     },
     "@nx/angular:unit-test": {
       "cache": true,
+      "dependsOn": ["^build"],
       "inputs": ["default", "^production"]
+    },
+    "@nx/angular:ng-packagr-lite": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "plugins": [
