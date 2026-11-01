@@ -4,6 +4,7 @@
 dist
 tmp
 out-tsc
+buildlog.txt
 
 # dependencies
 node_modules
