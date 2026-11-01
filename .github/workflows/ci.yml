@@ -85,7 +85,7 @@ jobs:
       # Conditionally inject Carto API key configuration for specific geospatial apps
       - name: Create carto configuration
         if: |
-          contains(fromJSON('["bio-stream", "data-curation", "spatial-temporal"]'), matrix.app) && 
+          contains(fromJSON('["bio-stream", "data-curation", "spatial-temporal"]'), matrix.app) &&
           env.CARTO_KEY != ''
         run: |
           CONFIG_DIR="./libs/config/src"
