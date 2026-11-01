@@ -8,7 +8,7 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 
-import { provideAppConfig } from '@es/config';
+import { provideAppConfig } from '@es/data-access';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
