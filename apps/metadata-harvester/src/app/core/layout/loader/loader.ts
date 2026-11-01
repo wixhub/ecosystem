@@ -1,10 +1,9 @@
 import { Component, signal, OnInit, OnDestroy, input } from '@angular/core';
 import animalFactsData from '../../../../../public/data/animal-facts.json';
-import { AnimalFact } from '../../models/metadata.model';
+import { AnimalFact } from '@es/data-access';
 
 @Component({
   selector: 'app-loader',
-  imports: [],
   templateUrl: './loader.html',
   styleUrl: './loader.scss',
 })

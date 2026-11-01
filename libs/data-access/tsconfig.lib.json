@@ -7,8 +7,10 @@
     "inlineSources": true,
     "types": [],
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "composite": false,
+    "noEmitOnError": false
   },
-  "include": ["src/**/*.ts", "../../libs/config/src/carto-config.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

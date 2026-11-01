@@ -1,5 +1,5 @@
 import { Dashboard } from './dashboard';
-import { MetadataApiService } from '../../core/services/metadata-api.service';
+import { MetadataApiService } from '@es/data-access';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';

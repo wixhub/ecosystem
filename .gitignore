@@ -4,10 +4,11 @@
 dist
 tmp
 out-tsc
+buildlog.txt
 
 # dependencies
 node_modules
-libs/config/src/carto-config.ts
+libs/config/src/carto.config.ts
 
 # IDEs and editors
 /.idea

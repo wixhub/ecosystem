@@ -4,7 +4,7 @@
   "sourceRoot": "libs/config/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": [],
+  "tags": ["type: config", "scope: shared"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
