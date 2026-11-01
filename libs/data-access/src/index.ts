@@ -1,3 +1,5 @@
+export * from './app.config';
+
 export * from './models/builder.config';
 
 export * from './models/builder.model';
