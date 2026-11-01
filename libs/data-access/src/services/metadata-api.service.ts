@@ -3,8 +3,8 @@
 import { Service, signal, inject } from '@angular/core';
 import { httpResource, HttpClient, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { APP_CONFIG, AppConfig } from '../app.config';
 import { DatasetRecord, IngestionPayload } from '../models/metadata.model';
-import { APP_CONFIG, AppConfig } from '@es/config';
 
 @Service()
 export class MetadataApiService {
