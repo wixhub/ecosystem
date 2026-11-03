@@ -4,7 +4,7 @@
   "sourceRoot": "libs/config/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": [],
+  "tags": ["type:config", "scope:shared"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -13,6 +13,12 @@
         "outputPath": "dist/libs/config",
         "main": "libs/config/src/index.ts",
         "tsConfig": "libs/config/tsconfig.lib.json",
+        "additionalEntryPoints": [
+          "libs/config/src/api/index.ts",
+          "libs/config/src/carto/index.ts",
+          "libs/config/src/worker/index.ts"
+        ],
+        "generateExportsField": true,
         "assets": []
       }
     },
