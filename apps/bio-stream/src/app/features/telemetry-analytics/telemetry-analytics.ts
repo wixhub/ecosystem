@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { BioTelemetryRecord } from '@es/data-access';
+import { BioTelemetryRecord } from '@es/map-access';
 
 @Component({
   selector: 'app-telemetry-analytics',

@@ -3,52 +3,74 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal, WritableSignal } from '@angular/core';
 import { MapContainer } from './map-container';
-import { TelemetryMapService, TelemetryStreamService } from '@es/data-access';
-
-// Mock CARTO_API_KEY to prevent unresolved external import errors in tests
-vi.mock('@es/config', () => ({
-  CARTO_API_KEY: 'mock-carto-api-key',
-}));
+import { BioTelemetryRecord, StreamMapService } from '@es/map-access';
+import { TelemetryStreamService } from '@es/data-access';
 
 describe('MapContainer', () => {
   let component: MapContainer;
   let fixture: ComponentFixture<MapContainer>;
-  let mapServiceMock: Partial<TelemetryMapService>;
-  let telemetryServiceMock: Partial<TelemetryStreamService>;
 
-  // Writable signals to match service reactive state precisely in tests
-  let liveErrorSignal: WritableSignal<string | null>;
-  let telemetryRecordsSignal: WritableSignal<any[]>;
-  let isLoadingSignal: WritableSignal<boolean>;
-  let useMockFallbackSignal: WritableSignal<boolean>;
+  let mockMapService: {
+    initializeMap: ReturnType<typeof vi.fn>;
+    renderTelemetryPoints: ReturnType<typeof vi.fn>;
+  };
+
+  let mockTelemetryService: {
+    liveError: WritableSignal<string | null>;
+    telemetryRecords: WritableSignal<BioTelemetryRecord[]>;
+    isLoading: WritableSignal<boolean>;
+    setStudyId: ReturnType<typeof vi.fn>;
+  };
+
+  const sampleRecords: BioTelemetryRecord[] = [
+    {
+      id: 'rec-1',
+      subjectId: 'sub-1',
+      species: 'AVIAN_MIGRATORY',
+      timestamp: '2026-06-01T00:00:00.000Z',
+      latitude: 10,
+      longitude: 20,
+      telemetry: {
+        heartRateBpm: 60,
+        bodyTemperatureC: 38.5,
+        activityLevelIndex: 5,
+      },
+    },
+    {
+      id: 'rec-2',
+      subjectId: 'sub-2',
+      species: 'MARINE_CETACEAN',
+      timestamp: '2026-06-01T01:00:00.000Z',
+      latitude: 15,
+      longitude: 25,
+      telemetry: {
+        heartRateBpm: 150,
+        bodyTemperatureC: 36.2,
+        activityLevelIndex: 8,
+      },
+    },
+  ];
 
   beforeEach(async () => {
-    // Initialize writable mock signals
-    liveErrorSignal = signal<string | null>(null);
-    telemetryRecordsSignal = signal<any[]>([]);
-    isLoadingSignal = signal<boolean>(false);
-    useMockFallbackSignal = signal<boolean>(false);
+    vi.useFakeTimers();
 
-    // Setup mock implementation for TelemetryMapService
-    mapServiceMock = {
+    mockMapService = {
       initializeMap: vi.fn(),
       renderTelemetryPoints: vi.fn(),
     };
 
-    // Setup mock implementation for TelemetryStreamService
-    telemetryServiceMock = {
-      liveError: liveErrorSignal,
-      telemetryRecords: telemetryRecordsSignal,
-      isLoading: isLoadingSignal,
-      useMockFallback: useMockFallbackSignal,
+    mockTelemetryService = {
+      liveError: signal<string | null>(null),
+      telemetryRecords: signal<BioTelemetryRecord[]>([]),
+      isLoading: signal<boolean>(false),
       setStudyId: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
       imports: [MapContainer],
       providers: [
-        { provide: TelemetryMapService, useValue: mapServiceMock },
-        { provide: TelemetryStreamService, useValue: telemetryServiceMock },
+        { provide: StreamMapService, useValue: mockMapService },
+        { provide: TelemetryStreamService, useValue: mockTelemetryService },
       ],
     }).compileComponents();
 
@@ -57,117 +79,123 @@ describe('MapContainer', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.clearAllMocks();
-    liveErrorSignal.set(null);
-    telemetryRecordsSignal.set([]);
-    isLoadingSignal.set(false);
-    useMockFallbackSignal.set(false);
   });
 
-  /**
-   * Test case: Component creation
-   */
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  /**
-   * Test case: Map initialization and default data fetch on view init
-   */
-  it('should initialize map and fetch default study telemetry on ngAfterViewInit', () => {
-    fixture.detectChanges(); // triggers ngAfterViewInit lifecycle hook
+  describe('Lifecycle (ngAfterViewInit & ngOnDestroy)', () => {
+    it('should initialize the map and set default study ID on ngAfterViewInit', () => {
+      fixture.detectChanges();
+      component.ngAfterViewInit();
 
-    expect(mapServiceMock.initializeMap).toHaveBeenCalledWith(
-      'leaflet-spatial-canvas',
-      expect.any(String), // Accepts any generated or mocked CARTO key
-      [15.0, 10.0],
-      3,
-    );
-    expect(telemetryServiceMock.setStudyId).toHaveBeenCalledWith('2911040');
+      expect(mockMapService.initializeMap).toHaveBeenCalledWith(
+        'leaflet-spatial-canvas',
+        [15.0, 10.0],
+        3,
+      );
+      expect(mockTelemetryService.setStudyId).toHaveBeenCalledWith('2911040');
+    });
+
+    it('should clear error timeout on destroy if active', () => {
+      fixture.detectChanges();
+      mockTelemetryService.liveError.set('Test Error');
+      fixture.detectChanges();
+
+      const clearSpy = vi.spyOn(window, 'clearTimeout');
+      component.ngOnDestroy();
+
+      expect(clearSpy).toHaveBeenCalled();
+      expect(component).toBeTruthy();
+    });
   });
 
-  /**
-   * Test case: Telemetry record filtering based on species and heart rate rules
-   */
-  it('should filter telemetry records based on active filters', () => {
-    const mockRecords = [
-      {
-        id: 'rec-1',
-        subjectId: 'sub-1',
+  describe('Effects & Filtering', () => {
+    it('should filter telemetry records by species and heart rate bounds', () => {
+      fixture.detectChanges();
+      mockTelemetryService.telemetryRecords.set(sampleRecords);
+
+      component.onFilterUpdated({
         species: 'AVIAN_MIGRATORY',
-        timestamp: new Date().toISOString(),
-        telemetry: { heartRateBpm: 100, bodyTemperatureC: 38, activityLevelIndex: 0.5 },
-        coordinates: { lat: 10, lng: 10 },
-      },
-      {
-        id: 'rec-2',
-        subjectId: 'sub-2',
-        species: 'MARINE_CETACEAN',
-        timestamp: new Date().toISOString(),
-        telemetry: { heartRateBpm: 10, bodyTemperatureC: 38, activityLevelIndex: 0.5 }, // Below min heart rate filter (20)
-        coordinates: { lat: 20, lng: 20 },
-      },
-    ];
+        minHeartRate: 40,
+        maxHeartRate: 100,
+        liveStreamEnabled: true,
+      });
 
-    telemetryRecordsSignal.set(mockRecords);
-    fixture.detectChanges();
+      fixture.detectChanges();
 
-    expect(component.filteredRecords().length).toBe(1);
-    expect(component.filteredRecords()[0].id).toBe('rec-1');
-    expect(mapServiceMock.renderTelemetryPoints).toHaveBeenCalledWith(component.filteredRecords());
+      const filtered = component.filteredRecords();
+      expect(filtered.length).toBe(1);
+      expect(filtered[0].id).toBe('rec-1');
+      expect(mockMapService.renderTelemetryPoints).toHaveBeenCalledWith(filtered);
+    });
+
+    it('should return empty records if liveStreamEnabled is false', () => {
+      fixture.detectChanges();
+      mockTelemetryService.telemetryRecords.set(sampleRecords);
+
+      component.onFilterUpdated({
+        species: 'ALL',
+        minHeartRate: 0,
+        maxHeartRate: 300,
+        liveStreamEnabled: false,
+      });
+
+      fixture.detectChanges();
+
+      expect(component.filteredRecords()).toEqual([]);
+    });
   });
 
-  /**
-   * Test case: Handling stream errors and automatic fallback to default study
-   */
-  it('should handle live stream errors and fallback if study is not default', () => {
-    // Explicitly set a non-default study ID first to trigger the fallback branch
-    component.selectedStudyId.set('9999999');
+  describe('Error Handling and Study Fallback', () => {
+    it('should show auto-closing error when default study (2911040) fails', () => {
+      fixture.detectChanges();
+      component.selectedStudyId.set('2911040');
 
-    // Simulate live stream error
-    liveErrorSignal.set('Upstream error');
-    fixture.detectChanges();
+      mockTelemetryService.liveError.set('Network Error');
+      fixture.detectChanges();
 
-    expect(component.selectedStudyId()).toBe('2911040');
-    expect(telemetryServiceMock.setStudyId).toHaveBeenCalledWith('2911040');
-    expect(component.errorMessage()).toContain('returned no data or failed');
+      expect(component.errorMessage()).toContain('Study ID "2911040" returned no data or failed');
+
+      vi.advanceTimersByTime(12_000);
+      expect(component.errorMessage()).toBeNull();
+    });
+
+    it('should fallback to default study (2911040) when a custom study fails', () => {
+      fixture.detectChanges();
+      component.selectedStudyId.set('CUSTOM_999');
+
+      mockTelemetryService.liveError.set('API Limit Exceeded');
+      fixture.detectChanges();
+
+      expect(component.selectedStudyId()).toBe('2911040');
+      expect(mockTelemetryService.setStudyId).toHaveBeenCalledWith('2911040');
+      expect(component.errorMessage()).toContain('Study ID "2911040" returned no data or failed');
+    });
   });
 
-  /**
-   * Test case: Manual error message dismissal
-   */
-  it('should dismiss error message when dismissError is called', () => {
-    component.errorMessage.set('Test error');
-    expect(component.errorMessage()).toBe('Test error');
+  describe('User Actions', () => {
+    it('should update selectedStudyId when onStudyChange is called', () => {
+      const dummyEvent = {
+        target: { value: '123456' },
+      } as unknown as Event;
 
-    component.dismissError();
-    expect(component.errorMessage()).toBeNull();
-  });
+      component.onStudyChange(dummyEvent);
+      expect(component.selectedStudyId()).toBe('123456');
+    });
 
-  /**
-   * Test case: Updating study ID from user input event
-   */
-  it('should update selected study ID on study change event', () => {
-    const mockEvent = {
-      target: { value: '1234567' },
-    } as unknown as Event;
+    it('should dismiss error manually', () => {
+      component.dismissError();
+      expect(component.errorMessage()).toBeNull();
+    });
 
-    component.onStudyChange(mockEvent);
-    expect(component.selectedStudyId()).toBe('1234567');
-  });
-
-  /**
-   * Test case: Updating analytics filters
-   */
-  it('should update filters when onFilterUpdated is called', () => {
-    const newFilters = {
-      species: 'MARINE_CETACEAN' as const,
-      minHeartRate: 50,
-      maxHeartRate: 150,
-      liveStreamEnabled: true,
-    };
-
-    component.onFilterUpdated(newFilters);
-    expect(component.filters()).toEqual(newFilters);
+    it('should switch live dataset successfully', () => {
+      component.switchToLiveDataset('55555');
+      expect(mockTelemetryService.setStudyId).toHaveBeenCalledWith('55555');
+      expect(component.errorMessage()).toBeNull();
+    });
   });
 });

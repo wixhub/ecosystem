@@ -1,14 +1,9 @@
-import { AfterViewInit, Component, effect, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, effect, inject, signal } from '@angular/core';
 
-import {
-  BioTelemetryRecord,
-  TelemetryFilterModel,
-  TelemetryMapService,
-  TelemetryStreamService,
-} from '@es/data-access';
+import { BioTelemetryRecord, StreamMapService } from '@es/map-access';
+import { TelemetryFilterModel, TelemetryStreamService } from '@es/data-access';
 import { TelemetryAnalytics } from '../telemetry-analytics/telemetry-analytics';
 import { TelemetryFilters } from '../telemetry-filters/telemetry-filters';
-import { CARTO_API_KEY } from '@es/config';
 
 @Component({
   selector: 'app-map-container',
@@ -16,8 +11,8 @@ import { CARTO_API_KEY } from '@es/config';
   templateUrl: './map-container.html',
   styleUrl: './map-container.scss',
 })
-export class MapContainer implements AfterViewInit {
-  private readonly mapService = inject(TelemetryMapService);
+export class MapContainer implements AfterViewInit, OnDestroy {
+  private readonly mapService = inject(StreamMapService);
 
   protected readonly telemetryService = inject(TelemetryStreamService);
 
@@ -121,10 +116,17 @@ export class MapContainer implements AfterViewInit {
    * Initializes the map after the component view has been created.
    */
   public ngAfterViewInit(): void {
-    this.mapService.initializeMap('leaflet-spatial-canvas', CARTO_API_KEY, [15.0, 10.0], 3);
+    this.mapService.initializeMap('leaflet-spatial-canvas', [15.0, 10.0], 3);
 
     // Start with the default active albatrosses study.
     this.telemetryService.setStudyId('2911040');
+  }
+
+  /**
+   * Cleans up active timeouts when the component is destroyed.
+   */
+  public ngOnDestroy(): void {
+    this.clearErrorTimeout();
   }
 
   /**
