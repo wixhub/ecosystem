@@ -1,0 +1,27 @@
+<div class="dataset-grid">
+  @for (dataset of datasets(); track dataset.id) {
+    <article class="dataset-card">
+      <div class="card-meta-top">
+        <span class="badge discipline">{{ dataset.discipline }}</span>
+        <span class="badge format">{{ dataset.format }}</span>
+      </div>
+
+      <h3 class="dataset-title">{{ dataset.title }}</h3>
+      <p class="dataset-doi"><strong>DOI / ID:</strong> {{ dataset.doi }}</p>
+      <p class="dataset-abstract">{{ dataset.abstract }}</p>
+
+      <div class="dataset-authors"><strong>Authors:</strong> {{ dataset.authors.join(', ') }}</div>
+
+      <div class="tags-container">
+        @for (tag of dataset.tags; track tag) {
+          <span class="tag">#{{ tag }}</span>
+        }
+      </div>
+
+      <footer class="card-footer">
+        <span class="file-size">📦 {{ dataset.fileSize }}</span>
+        <span class="downloads">⬇️ {{ dataset.downloadsCount }} downloads</span>
+      </footer>
+    </article>
+  }
+</div>
