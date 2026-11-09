@@ -1,1 +1,106 @@
-/* You can add global styles to this file, and also import other style files */
+// 1. Design Tokens (Colors & Shared Variables)
+:root {
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --color-primary: #3182ce;
+  --color-primary-hover: #2b6cb0;
+  --color-text-main: #2c3e50;
+  --color-text-muted: #64748b;
+  --color-text-dark: #1e293b;
+
+  --bg-body: #ffffff;
+  --bg-panel: #f8fafc;
+  --border-color: #cbd5e1;
+  --border-light: #e2e8f0;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+
+  --control-height: 42px;
+}
+
+// Global resets / defaults if needed
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  color: var(--color-text-main);
+  background-color: #fdfdfd;
+}
+
+// 2. Universal Button System (reused across components)
+.btn {
+  height: var(--control-height);
+  padding: 0 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-body);
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: var(--color-text-dark);
+  }
+
+  &.active {
+    background: #e2e8f0;
+    color: var(--color-text-dark);
+    border-color: #94a3b8;
+    font-weight: 600;
+  }
+
+  &.live-btn {
+    background: #f0fdf4;
+    color: #16a34a;
+    border-color: #bbf7d0;
+    font-weight: 600;
+
+    &:hover {
+      background: #dcfce7;
+      border-color: #86efac;
+    }
+
+    &.active {
+      background: #16a34a;
+      color: #ffffff;
+      border-color: #16a34a;
+    }
+  }
+
+  &.mock-btn {
+    background: var(--bg-panel);
+    color: #475569;
+
+    &.active {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-color: #64748b;
+    }
+  }
+
+  &.reset-btn {
+    color: var(--color-text-muted);
+
+    &:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
