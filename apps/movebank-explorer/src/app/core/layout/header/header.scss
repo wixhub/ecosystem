@@ -1,0 +1,134 @@
+.repo-header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 1.5rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+  }
+
+  .live-query-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+    background: var(--bg-panel);
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    margin-top: 1rem;
+
+    .query-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+
+      label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #4a5568;
+        white-space: nowrap;
+      }
+
+      select,
+      input {
+        height: var(--control-height);
+        padding: 0 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+        background: var(--bg-body);
+        color: var(--color-text-dark);
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.2s;
+
+        &:focus {
+          border-color: var(--color-primary);
+          box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+        }
+      }
+
+      select { min-width: 170px; }
+      input { width: 130px; }
+    }
+
+    .api-status-field {
+      justify-content: center;
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        height: var(--control-height);
+        padding: 0 0.85rem;
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        border-radius: 50px;
+        font-size: 0.875rem;
+        color: #334155;
+        box-sizing: border-box;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+      }
+
+      .status-text {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .count {
+    justify-content: center;
+  }
+}
+
+.ai-prompt-field {
+  flex: 1 1 100% !important;
+
+  .ai-input-group {
+    display: flex;
+    gap: 0.5rem;
+
+    input {
+      flex: 1;
+      width: auto !important;
+      height: var(--control-height);
+      border-color: var(--border-color);
+
+      &:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      }
+    }
+  }
+
+  .ai-btn {
+    height: var(--control-height);
+    background: #eef2ff;
+    color: #4f46e5;
+    border-color: #c7d2fe;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &:hover {
+      background: #e0e7ff;
+      border-color: #a5b4fc;
+    }
+  }
+}
