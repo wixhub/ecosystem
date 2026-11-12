@@ -1,13 +1,10 @@
-@use 'sass:color';
-@use '../../../styles' as *;
-
 .wizard-container {
   max-width: 600px;
   margin: 2rem auto;
   padding: 2rem;
   background: white;
   border-radius: 8px;
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   nav {
@@ -15,12 +12,12 @@
   }
   h2 {
     margin: 0 0 0.5rem 0;
-    color: $text-main;
+    color: var(--text-main);
   }
 }
 
 .subtitle {
-  color: $text-muted;
+  color: var(--text-muted);
   margin-bottom: 2rem;
   font-size: 0.95rem;
 }
@@ -34,31 +31,31 @@
       font-weight: 500;
       font-size: 0.95rem;
       margin-bottom: 0.5rem;
-      color: $text-main;
+      color: var(--text-main);
     }
 
     select,
     input[type='text'] {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 1px solid $border-color;
+      border: 1px solid var(--border-color);
       border-radius: 8px;
       font-size: 0.95rem;
-      background: $light-bg;
-      color: $text-main;
+      background: var(--light-bg);
+      color: var(--text-main);
       transition: all 0.2s ease;
 
       &::placeholder {
-        color: $text-muted;
+        color: var(--text-muted);
       }
       &:hover {
-        border-color: color.adjust($border-color, $lightness: -10%);
+        border-color: var(--border-color-dark);
       }
       &:focus {
         outline: none;
         background: #fff;
-        border-color: $primary-color;
-        box-shadow: 0 0 0 3px rgba($primary-color, 0.12);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.12);
       }
     }
 
@@ -74,16 +71,16 @@
   align-items: center;
   justify-content: center;
   padding: 1.75rem 1rem;
-  border: 2px dashed $border-color;
+  border: 2px dashed var(--border-color);
   border-radius: 8px;
-  background: $light-bg;
+  background: var(--light-bg);
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
 
   &:hover {
-    border-color: $primary-color;
-    background: color.adjust($light-bg, $lightness: 1%);
+    border-color: var(--primary-color);
+    background: var(--border-color-dark);
   }
 
   .file-drop-text {
@@ -93,18 +90,18 @@
     gap: 0.5rem;
     width: 100%;
     strong {
-      color: $text-main;
+      color: var(--text-main);
     }
   }
 
   .file-choose-btn {
     background: #edf2f7;
-    color: $text-main;
+    color: var(--text-main);
     padding: 0.5rem 1.25rem;
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 500;
-    border: 1px solid $border-color;
+    border: 1px solid var(--border-color);
     transition: background 0.2s;
     &:hover {
       background: #e2e8f0;
@@ -112,7 +109,7 @@
   }
 
   .file-subtitle {
-    color: $text-muted;
+    color: var(--text-muted);
     font-size: 0.85rem;
     margin-top: 0.2rem;
   }
@@ -127,7 +124,7 @@
   margin: 1rem 0;
 
   .progress-bar {
-    background: $primary-color;
+    background: var(--primary-color);
     height: 100%;
     transition: width 0.3s ease;
   }
@@ -138,7 +135,7 @@
     text-align: center;
     top: 2px;
     font-size: 0.85rem;
-    color: $text-main;
+    color: var(--text-main);
     font-weight: bold;
   }
 }
@@ -164,7 +161,6 @@
 .form-actions {
   margin-top: 2rem;
   button[type='submit'] {
-    @extend .btn-primary;
     border-radius: 8px;
     padding: 0.85rem;
     font-size: 1rem;
