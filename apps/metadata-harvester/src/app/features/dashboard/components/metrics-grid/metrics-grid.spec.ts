@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MetricsGrid } from './metrics-grid';
 import { Component } from '@angular/core';
-import { CardType } from '../../../../core/models/metadata.model';
+import { CardType } from '@es/data-access';
 
 @Component({
   template: `
