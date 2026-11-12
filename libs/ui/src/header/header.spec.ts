@@ -1,20 +1,20 @@
-import { TestBed } from '@angular/core/testing';
-import { Header } from './header';
-import { TrackingStateService } from '../../services/tracking-state.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Header, HeaderStateService } from './header';
 
 describe('Header', () => {
   let component: Header;
-  let fixture: any;
-  let trackingStateServiceMock: { loadRawFile: ReturnType<typeof vi.fn> };
+  let fixture: ComponentFixture<Header>;
+  let mockStateService: HeaderStateService;
 
   beforeEach(async () => {
-    trackingStateServiceMock = {
+    // Create type-safe mock functions using Vitest
+    mockStateService = {
       loadRawFile: vi.fn(),
+      exportData: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
       imports: [Header],
-      providers: [{ provide: TrackingStateService, useValue: trackingStateServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Header);
@@ -22,12 +22,26 @@ describe('Header', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create the header component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call loadRawFile on TrackingStateService when a file is selected', () => {
-    const mockFile = new File(['dummy content'], 'test.csv', { type: 'text/csv' });
+  it('should render brand title and subtitle', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const title = compiled.querySelector('h1');
+    const subtitle = compiled.querySelector('.subtitle');
+
+    expect(title?.textContent).toContain('FaunaQC Studio');
+    expect(subtitle?.textContent).toContain('Animal Tracking Curation Engine');
+  });
+
+  it('should call loadRawFile on stateService when a file is selected', () => {
+    // Pass mock service via signal input
+    fixture.componentRef.setInput('stateService', mockStateService);
+
+    const mockFile = new File(['dummy content'], 'test.csv', {
+      type: 'text/csv',
+    });
     const event = {
       target: {
         files: [mockFile],
@@ -36,19 +50,20 @@ describe('Header', () => {
 
     component.onFileSelected(event);
 
-    expect(trackingStateServiceMock.loadRawFile).toHaveBeenCalledTimes(1);
-    expect(trackingStateServiceMock.loadRawFile).toHaveBeenCalledWith(mockFile);
+    expect(mockStateService.loadRawFile).toHaveBeenCalledWith(mockFile);
   });
 
-  it('should not call loadRawFile if no files are selected', () => {
-    const event = {
-      target: {
-        files: [],
-      },
-    } as unknown as Event;
+  it('should call exportData with csv format when Export CSV button is clicked', () => {
+    fixture.componentRef.setInput('stateService', mockStateService);
+    fixture.detectChanges();
 
-    component.onFileSelected(event);
+    const compiled = fixture.nativeElement as HTMLElement;
+    const exportCsvButton = Array.from(
+      compiled.querySelectorAll('button'),
+    ).find((btn) => btn.textContent?.includes('Export CSV'));
 
-    expect(trackingStateServiceMock.loadRawFile).not.toHaveBeenCalled();
+    exportCsvButton?.click();
+
+    expect(mockStateService.exportData).toHaveBeenCalledWith('csv');
   });
 });

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "declarationMap": false,
+    "paths": {
+      "@es/config/api": ["../../dist/libs/config/src/api"],
+      "@es/config/carto": ["../../dist/libs/config/src/carto"],
+      "@es/config/worker": ["../../dist/libs/config/src/worker"]
+    }
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
+}

@@ -1,0 +1,105 @@
+<header class="repo-header">
+  <h1>MoveRDM Dataset Explorer</h1>
+
+  <p class="subtitle">
+    Research Data Repository Prototype integrating live telemetry from the
+    <a href="https://www.movebank.org/" target="_blank" rel="noopener">Movebank API</a>
+    <br />
+    A global infrastructure coordinated by the
+    <a href="https://www.mpg.de/" target="_blank" rel="noopener"
+      >Max Planck Institute of Animal Behavior</a
+    >, the
+    <a href="https://www.uni-konstanz.de/" target="_blank" rel="noopener">University of Konstanz</a>
+    and partner institutions
+  </p>
+
+  <!-- Query Panel -->
+  <div class="live-query-panel">
+    <div class="query-field ai-prompt-field">
+      <label for="aiPrompt">🤖 AI Assistant Query:</label>
+      <div class="ai-input-group">
+        <input
+          id="aiPrompt"
+          type="text"
+          [value]="aiPrompt()"
+          (input)="onAiInput($event)"
+          placeholder="e.g. find studies about white storks"
+        />
+        <button type="button" class="btn ai-btn" (click)="aiSearch.emit()">✨ Ask AI</button>
+      </div>
+    </div>
+
+    <div class="query-field">
+      <label for="entityType">Entity</label>
+      <select id="entityType" [value]="entityType()" (change)="onEntityChange($event)">
+        <option value="study">Studies (List)</option>
+        <option value="event">Events (Telemetry Data)</option>
+        <option value="tag_type">Tag Types (Sensors)</option>
+        <option value="taxon">Taxons (Animal Species)</option>
+        <option value="deployment">Deployments (Tracking events)</option>
+      </select>
+    </div>
+
+    <div class="query-field">
+      <label for="studyId">Study ID (Optional)</label>
+      <input
+        id="studyId"
+        type="text"
+        [value]="studyId()"
+        (input)="onStudyIdInput($event)"
+        placeholder="e.g. 123456"
+      />
+    </div>
+
+    <div class="query-field">
+      <label>Movebank Source</label>
+      <button
+        type="button"
+        class="btn live-btn"
+        [class.active]="activeSource() === 'live'"
+        (click)="loadLive.emit()"
+      >
+        🌐 Fetch Live API
+      </button>
+    </div>
+
+    <div class="query-field api-status-field">
+      <label>Status</label>
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span class="status-text">Movebank API: Connected</span>
+      </div>
+    </div>
+
+    <div class="query-field api-status-field">
+      <label>Total Datasets</label>
+      <div class="status-indicator count">
+        <span class="status-text">{{ datasetsCount() }}</span>
+      </div>
+    </div>
+
+    <div class="query-field">
+      <label>Mock Data</label>
+      <button
+        type="button"
+        class="btn mock-btn"
+        [class.active]="activeSource() === 'mock'"
+        (click)="loadMock.emit()"
+      >
+        📂 Local Mock
+      </button>
+    </div>
+
+    <div class="query-field">
+      <label>Actions</label>
+      <button
+        type="button"
+        class="btn reset-btn"
+        (click)="reset.emit()"
+        title="Clear all filters and inputs"
+      >
+        🔄 Reset
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,9 +1,7 @@
-import nx from '@nx/eslint-plugin';
+import baseConfig from './eslint.base.config.mjs';
 
 export default [
-  ...nx.configs['flat/base'],
-  ...nx.configs['flat/typescript'],
-  ...nx.configs['flat/javascript'],
+  ...baseConfig,
   {
     ignores: [
       '**/dist',
@@ -24,6 +22,14 @@ export default [
             {
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*'],
+            },
+            {
+              sourceTag: 'type:app',
+              onlyDependOnLibsWithTags: [
+                'type:config',
+                'type:data-access',
+                'type:ui',
+              ],
             },
           ],
         },

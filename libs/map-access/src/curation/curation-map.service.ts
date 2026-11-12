@@ -1,14 +1,14 @@
-// Project data-curation
 import { Service } from '@angular/core';
-
 import * as L from 'leaflet';
+import { LeafletMapService } from '../leaflet-map.service';
+import { TrackingPoint } from './curation.model';
 
-import { LeafletMapService } from './leaflet-map.service';
-
-import { TrackingPoint } from '../models/tracking.model';
-
+/**
+ * Service dedicated to rendering tracking points, individual animal paths,
+ * and data curation error flags on the map.
+ */
 @Service()
-export class TrackingMapService extends LeafletMapService {
+export class CurationMapService extends LeafletMapService {
   /**
    * Renders tracking points and creates an independent track
    * for every individual.
@@ -64,6 +64,7 @@ export class TrackingMapService extends LeafletMapService {
           <strong>Subject:</strong> ${record.individualId}<br/>
           <strong>Speed:</strong> ${record.speedKmH ?? 0} km/h<br/>
           <strong>Accuracy:</strong> ${record.accuracyMeters}m<br/>
+          <strong>Flagged:</strong> ${record.isFlagged ? 'Yes (' + (record.flagReason ?? 'Reason unspecified') + ')' : 'No'}<br/>
           <strong>Time:</strong> ${new Date(record.timestamp).toLocaleTimeString()}
         </div>
       `);
@@ -72,7 +73,6 @@ export class TrackingMapService extends LeafletMapService {
     }
 
     this.renderIndividualTracks(individualTracks);
-
     this.fitBounds(allLatLngs, 14);
   }
 

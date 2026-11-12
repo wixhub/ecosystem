@@ -70,6 +70,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -83,16 +85,16 @@ jobs:
       # Conditionally inject Carto API key configuration for specific geospatial apps
       - name: Create carto configuration
         if: |
-          contains(fromJSON('["bio-stream", "data-curation", "spatial-temporal"]'), matrix.app) && 
+          contains(fromJSON('["bio-stream", "data-curation", "spatial-temporal"]'), matrix.app) &&
           env.CARTO_KEY != ''
         run: |
-          CONFIG_DIR="./libs/config/src"
+          CONFIG_DIR="./libs/config/src/carto"
           mkdir -p "$CONFIG_DIR"
           node -e '
             const fs = require("node:fs");
             const key = process.env.CARTO_KEY;
             fs.writeFileSync(
-              "libs/config/src/carto-config.ts",
+              "libs/config/src/carto/carto.config.ts",
               "export const CARTO_API_KEY = " + JSON.stringify(key) + ";\n"
             );
           '

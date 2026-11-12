@@ -15,10 +15,13 @@
     "skipDefaultLibCheck": true,
     "strict": false,
     "paths": {
-      "@es/config": ["./libs/config/src/index.ts"],
+      "@es/config/api": ["./libs/config/src/api/index.ts"],
+      "@es/config/carto": ["./libs/config/src/carto/index.ts"],
+      "@es/config/worker": ["./libs/config/src/worker/index.ts"],
       "@es/data-access": ["./libs/data-access/src/index.ts"],
+      "@es/map-access": ["./libs/map-access/src/index.ts"],
       "@es/styles": ["./libs/styles/src/index.ts"],
-      "@es/ui": ["./libs/ui/src/index.ts"],
+      "@es/ui": ["./libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

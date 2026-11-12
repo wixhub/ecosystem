@@ -9,8 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { TrackingMapService, TrackingPoint } from '@es/data-access';
-import { CARTO_API_KEY } from '@es/config';
+import { CurationMapService, TrackingPoint } from '@es/map-access';
 
 @Component({
   selector: 'app-map-inspector',
@@ -24,21 +23,24 @@ export class MapInspector {
   readonly data = input.required<TrackingPoint[]>();
 
   /**
-   * Currently selected individual.
+   * Currently selected individual identifier.
    */
   readonly selectedId = input<string | null>(null);
 
   /**
-   * Emits the ID of the selected individual.
+   * Emits the ID of the selected individual when interacted with.
    */
   readonly select = output<string>();
 
   /**
-   * Leaflet map container element.
+   * Leaflet map container element reference from the template.
    */
   readonly mapContainer = viewChild.required<ElementRef<HTMLDivElement>>('mapContainer');
 
-  private readonly mapService = inject(TrackingMapService);
+  /**
+   * Injected curation map service handling Leaflet map lifecycle and layer rendering.
+   */
+  private readonly mapService = inject(CurationMapService);
 
   private isMapInitialized = false;
 
@@ -66,20 +68,19 @@ export class MapInspector {
   }
 
   /**
-   * Creates the Leaflet map and renders the initial tracking data.
+   * Creates the Leaflet map instance and renders initial tracking data.
+   * The API key is handled internally by the map service via DI.
    */
   private initializeMap(): void {
     const container = this.mapContainer().nativeElement;
-
     const containerId = this.createContainerId();
-
     container.id = containerId;
 
     const points = this.data();
-
     const [latitude, longitude] = this.getInitialCenter(points);
 
-    this.mapService.initializeMap(containerId, CARTO_API_KEY, [latitude, longitude], 10);
+    // Initialize map through the service without passing the API key manually
+    this.mapService.initializeMap(containerId, [latitude, longitude], 10);
 
     this.isMapInitialized = true;
 
@@ -89,20 +90,28 @@ export class MapInspector {
   }
 
   /**
-   * Creates a unique DOM ID for the Leaflet container.
+   * Generates a unique DOM ID for the Leaflet container element.
    */
   private createContainerId(): string {
     return `map-frame-${Math.random().toString(36).substring(2, 9)}`;
   }
 
   /**
-   * Returns the initial map center based on the first tracking point.
+   * Returns the initial map center based on the first valid tracking point.
    */
   private getInitialCenter(points: readonly TrackingPoint[]): [number, number] {
-    if (points.length === 0) {
-      return [47.65, 9.47];
+    const validPoint = points.find(
+      (p) =>
+        typeof p.latitude === 'number' &&
+        typeof p.longitude === 'number' &&
+        !isNaN(p.latitude) &&
+        !isNaN(p.longitude),
+    );
+
+    if (!validPoint) {
+      return [47.65, 9.47]; // Fallback coordinates
     }
 
-    return [points[0].latitude, points[0].longitude];
+    return [validPoint.latitude, validPoint.longitude];
   }
 }

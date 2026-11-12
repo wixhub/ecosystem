@@ -15,23 +15,22 @@ html {
   );
 }
 
-// Global Variables & Custom Tokens
-$font-stack:
-  system-ui,
-  -apple-system,
-  sans-serif;
-$primary-color: #2b6cb0;
-$primary-hover: #2c5282;
-$border-color: #cbd5e0;
-$light-bg: #f8fafc;
-$text-main: #2d3748;
-$text-muted: #718096;
+// Global Custom Properties (Native CSS Variables)
+:root {
+  --font-stack: system-ui, -apple-system, sans-serif;
+  --primary-color: #2b6cb0;
+  --primary-hover: #2c5282;
+  --border-color: #cbd5e0;
+  --light-bg: #f8fafc;
+  --text-main: #2d3748;
+  --text-muted: #718096;
+}
 
 body {
   color-scheme: light;
   background-color: var(--mat-sys-surface, #f7fafc);
-  color: var(--mat-sys-on-surface, $text-main);
-  font-family: $font-stack;
+  color: var(--mat-sys-on-surface, var(--text-main));
+  font-family: var(--font-stack);
   margin: 0;
   padding: 0;
   height: 100%;
@@ -43,7 +42,7 @@ h2 {
 }
 
 nav a {
-  color: $primary-color;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
   &:hover {
@@ -64,11 +63,11 @@ nav a {
 }
 
 .btn-primary {
-  background: $primary-color;
+  background: var(--primary-color);
   color: white;
   width: 100%;
   &:hover:not(:disabled) {
-    background: $primary-hover;
+    background: var(--primary-hover);
   }
   &:disabled {
     background: #cbd5e0;
@@ -78,8 +77,8 @@ nav a {
 
 .btn-secondary {
   background: #edf2f7;
-  color: $text-main;
-  border: 1px solid $border-color;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
   &:hover {
     background: #e2e8f0;
   }

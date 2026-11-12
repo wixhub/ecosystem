@@ -1,31 +1,26 @@
 /// <reference types="vitest/globals" />
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, it, expect, beforeEach } from 'vitest';
-
 import { TelemetryAnalytics } from './telemetry-analytics';
-import { BioTelemetryRecord } from '@es/data-access';
+import { BioTelemetryRecord } from '@es/map-access';
 
 describe('TelemetryAnalytics', () => {
   let component: TelemetryAnalytics;
   let fixture: ComponentFixture<TelemetryAnalytics>;
 
-  const mockRecords: BioTelemetryRecord[] = [
+  const sampleRecords: BioTelemetryRecord[] = [
     {
       id: 'rec-1',
       subjectId: 'sub-1',
       species: 'AVIAN_MIGRATORY',
-      timestamp: '2026-01-01T00:00:00Z',
-      coordinates: { lat: 10, lng: 20 },
-      telemetry: { heartRateBpm: 120, bodyTemperatureC: 39, activityLevelIndex: 5 },
-    },
-    {
-      id: 'rec-2',
-      subjectId: 'sub-2',
-      species: 'MARINE_CETACEAN',
-      timestamp: '2026-01-01T00:01:00Z',
-      coordinates: { lat: 11, lng: 21 },
-      telemetry: { heartRateBpm: 60, bodyTemperatureC: 36, activityLevelIndex: 2 },
+      timestamp: '2026-06-01T00:00:00.000Z',
+      latitude: 10,
+      longitude: 20,
+      telemetry: {
+        heartRateBpm: 60,
+        bodyTemperatureC: 38.5,
+        activityLevelIndex: 5,
+      },
     },
   ];
 
@@ -42,12 +37,12 @@ describe('TelemetryAnalytics', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should accept records via input signal', () => {
-    // Bind required input using componentRef or fixture input binding (Angular 17+ style)
-    fixture.componentRef.setInput('records', mockRecords);
+  it('should accept and update the required records input', () => {
+    // Bind the required input signal
+    fixture.componentRef.setInput('records', sampleRecords);
     fixture.detectChanges();
 
-    expect(component.records()).toEqual(mockRecords);
-    expect(component.records().length).toBe(2);
+    expect(component.records()).toEqual(sampleRecords);
+    expect(component.records().length).toBe(1);
   });
 });

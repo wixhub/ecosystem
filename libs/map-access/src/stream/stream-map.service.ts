@@ -1,17 +1,16 @@
-// Project bio-stream
 import { Service } from '@angular/core';
-
 import * as L from 'leaflet';
+import { LeafletMapService } from '../leaflet-map.service';
+import { BioTelemetryRecord, SpeciesType } from './stream.model';
 
-import { LeafletMapService } from './leaflet-map.service';
-
-import { BioTelemetryRecord } from '../models/telemetry.model';
-
+/**
+ * Service dedicated to rendering bio-telemetry records and health indicators on the map.
+ */
 @Service()
-export class TelemetryMapService extends LeafletMapService {
+export class StreamMapService extends LeafletMapService {
   /**
    * Renders telemetry records as markers and connects their locations
-   * with a single vector path.
+   * with a single vector path polyline.
    */
   public renderTelemetryPoints(records: readonly BioTelemetryRecord[]): void {
     if (!this.mapInstance) {
@@ -23,10 +22,17 @@ export class TelemetryMapService extends LeafletMapService {
     const latLngs: [number, number][] = [];
 
     for (const record of records) {
-      const latLng: [number, number] = [
-        record.coordinates.lat,
-        record.coordinates.lng,
-      ];
+      // Защита от undefined, null или NaN в координатах
+      if (
+        typeof record.latitude !== 'number' ||
+        typeof record.longitude !== 'number' ||
+        isNaN(record.latitude) ||
+        isNaN(record.longitude)
+      ) {
+        continue;
+      }
+
+      const latLng: [number, number] = [record.latitude, record.longitude];
 
       latLngs.push(latLng);
 
@@ -44,6 +50,7 @@ export class TelemetryMapService extends LeafletMapService {
           <strong>Subject:</strong> ${record.subjectId}<br/>
           <strong>Species:</strong> ${record.species}<br/>
           <strong>HR:</strong> ${record.telemetry.heartRateBpm} BPM<br/>
+          <strong>Temp:</strong> ${record.telemetry.bodyTemperatureC} °C<br/>
           <strong>Time:</strong> ${new Date(record.timestamp).toLocaleTimeString()}
         </div>
       `);
@@ -51,7 +58,10 @@ export class TelemetryMapService extends LeafletMapService {
       this.markerLayerGroup.addLayer(marker);
     }
 
-    this.fitBounds(latLngs, 9);
+    // Вызываем fitBounds только если у нас есть валидные точки
+    if (latLngs.length > 0) {
+      this.fitBounds(latLngs, 12);
+    }
 
     if (latLngs.length < 2) {
       return;
@@ -68,9 +78,9 @@ export class TelemetryMapService extends LeafletMapService {
   }
 
   /**
-   * Maps a species type to a marker color.
+   * Maps a species type to a corresponding marker color.
    */
-  private getSpeciesColor(species: string): string {
+  private getSpeciesColor(species: SpeciesType): string {
     switch (species) {
       case 'AVIAN_MIGRATORY':
         return '#10b981';

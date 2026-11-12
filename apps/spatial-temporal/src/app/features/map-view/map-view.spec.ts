@@ -1,103 +1,102 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MapView } from './map-view';
 import { MigrationService } from '@es/data-access';
+import { SpatialMapService } from '@es/map-access';
 
 describe('MapView', () => {
   let component: MapView;
   let fixture: ComponentFixture<MapView>;
-  let migrationServiceMock: any;
+  let migrationServiceMock: {
+    currentPositions: ReturnType<typeof signal>;
+    activeTracks: ReturnType<typeof signal>;
+    dataset: ReturnType<typeof signal>;
+  };
+  let spatialMapServiceMock: {
+    initializeMap: ReturnType<typeof vi.fn>;
+    updateMapEntities: ReturnType<typeof vi.fn>;
+    rebuildStaticTracks: ReturnType<typeof vi.fn>;
+    fitMapToTracks: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(async () => {
-    // Mock for MigrationService signals and state properties
     migrationServiceMock = {
       currentPositions: signal([]),
       activeTracks: signal([]),
-      dataset: signal({
-        datasetId: '2911040',
-        title: 'Test Dataset',
-        description: 'Test',
-        startTime: 1000,
-        endTime: 5000,
-        tracks: [
-          {
-            individualId: 'sub-1',
-            speciesName: 'Test Species',
-            commonName: 'Subject 1',
-            tagDeployDate: '2026-01-01',
-            color: '#38bdf8',
-            points: [
-              {
-                id: 'p1',
-                individualId: 'sub-1',
-                timestamp: 1000,
-                latitude: 47.5,
-                longitude: 9.5,
-                sensorType: 'GPS',
-              },
-            ],
-          },
-        ],
-      }),
+      dataset: signal(null),
+    };
+
+    spatialMapServiceMock = {
+      initializeMap: vi.fn(),
+      updateMapEntities: vi.fn(),
+      rebuildStaticTracks: vi.fn(),
+      fitMapToTracks: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
       imports: [MapView],
-      providers: [{ provide: MigrationService, useValue: migrationServiceMock }],
+      providers: [
+        { provide: MigrationService, useValue: migrationServiceMock },
+        { provide: SpatialMapService, useValue: spatialMapServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MapView);
     component = fixture.componentInstance;
-  });
-
-  it('should create the component and initialize leaflet map on afterViewInit', () => {
-    expect(component).toBeTruthy();
-
-    // Trigger ngAfterViewInit to initialize Leaflet map container in DOM
     fixture.detectChanges();
-
-    // Verify that the map DOM element container is rendered successfully
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('div')).toBeTruthy();
   });
 
-  it('should update map entities when currentPositions signal changes', () => {
-    fixture.detectChanges(); // Initialize map component first
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
-    // Push new simulated positions to trigger map entities update effect
-    migrationServiceMock.currentPositions.set([
+  it('should update map entities when currentPositions signal changes after initialization', () => {
+    // Explicitly type the mock data instead of using 'as any'
+    const mockPositions = [
       {
-        track: {
-          individualId: 'sub-1',
-          commonName: 'Subject 1',
-          speciesName: 'Test Species',
-          color: '#38bdf8',
-        },
-        currentPoint: {
-          latitude: 48.0,
-          longitude: 10.0,
-          timestamp: 2000,
-          sensorType: 'GPS',
-          groundSpeed: 5.5,
-        },
-        trail: [
-          { latitude: 47.5, longitude: 9.5 },
-          { latitude: 48.0, longitude: 10.0 },
-        ],
+        track: { individualId: 'track-1' },
+        currentPoint: { latitude: 10, longitude: 20, timestamp: new Date().toISOString() },
+        trail: [],
       },
-    ]);
+    ];
 
+    migrationServiceMock.currentPositions.set(mockPositions);
     fixture.detectChanges();
-    // Ensure component processes position updates without throwing errors
-    expect(component).toBeTruthy();
+
+    expect(spatialMapServiceMock.updateMapEntities).toHaveBeenCalledWith(mockPositions);
   });
 
-  it('should clean up map on destroy safely', () => {
-    fixture.detectChanges(); // Initialize map
+  it('should rebuild static tracks when activeTracks signal changes', () => {
+    const mockTracks = [
+      {
+        individualId: 'track-1',
+        color: '#3b82f6',
+        points: [{ latitude: 10, longitude: 20, timestamp: new Date().toISOString() }],
+      },
+    ];
 
-    // Explicitly call component destruction and verify no Leaflet reuse exceptions occur
-    expect(() => {
-      component.ngOnDestroy();
-    }).not.toThrow();
+    migrationServiceMock.activeTracks.set(mockTracks);
+    fixture.detectChanges();
+
+    expect(spatialMapServiceMock.rebuildStaticTracks).toHaveBeenCalledWith(mockTracks);
+  });
+
+  it('should fit map bounds when a valid dataset is loaded', () => {
+    const mockDataset = {
+      datasetId: 'dataset-1',
+      tracks: [
+        {
+          individualId: 'track-1',
+          color: '#3b82f6',
+          points: [{ latitude: 10, longitude: 20, timestamp: new Date().toISOString() }],
+        },
+      ],
+    };
+
+    migrationServiceMock.dataset.set(mockDataset);
+    fixture.detectChanges();
+
+    expect(spatialMapServiceMock.fitMapToTracks).toHaveBeenCalledWith(mockDataset.tracks);
   });
 });

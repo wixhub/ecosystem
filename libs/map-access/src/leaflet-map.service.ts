@@ -1,6 +1,13 @@
 import { DestroyRef, inject } from '@angular/core';
+import { Service } from '@angular/core';
+import { CARTO_CONFIG } from '@es/config/carto';
 import * as L from 'leaflet';
 
+/**
+ * Abstract base service providing shared Leaflet map initialization,
+ * layer groups management, and resource cleanup lifecycle.
+ */
+@Service()
 export abstract class LeafletMapService {
   protected mapInstance: L.Map | null = null;
 
@@ -8,6 +15,7 @@ export abstract class LeafletMapService {
   protected readonly vectorLayerGroup = L.layerGroup();
 
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cartoApiKey = inject(CARTO_CONFIG, { optional: true }) ?? '';
 
   constructor() {
     this.destroyRef.onDestroy(() => {
@@ -16,16 +24,16 @@ export abstract class LeafletMapService {
   }
 
   /**
-   * Initializes the Leaflet map and adds the shared CARTO tile layer.
+   * Initializes the Leaflet map container and adds the shared CARTO tile layer.
    */
   public initializeMap(
-    containerId: string,
-    cartoApiKey: string,
-    initialCenter: [number, number] = [20, 0],
-    zoom = 3,
-  ): void {
+    containerId: string | HTMLElement,
+    initialCenter: [number, number] = [47.5, 9.5],
+    zoom = 6,
+    theme: 'voyager' | 'dark_all' = 'voyager',
+  ): L.Map {
     if (this.mapInstance) {
-      return;
+      return this.mapInstance;
     }
 
     this.mapInstance = L.map(containerId, {
@@ -34,7 +42,7 @@ export abstract class LeafletMapService {
     }).setView(initialCenter, zoom);
 
     L.tileLayer(
-      `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`,
+      `https://{s}.basemaps.cartocdn.com/rastertiles/${theme}/{z}/{x}/{y}{r}.png?key=${this.cartoApiKey}`,
       {
         attribution: '&copy; CARTO',
         maxZoom: 19,
@@ -46,10 +54,12 @@ export abstract class LeafletMapService {
     this.vectorLayerGroup.addTo(this.mapInstance);
 
     this.invalidateMapSize();
+
+    return this.mapInstance;
   }
 
   /**
-   * Forces Leaflet to recalculate the map container dimensions.
+   * Forces Leaflet to recalculate container dimensions.
    */
   protected invalidateMapSize(): void {
     setTimeout(() => {
@@ -58,23 +68,22 @@ export abstract class LeafletMapService {
   }
 
   /**
-   * Fits the map viewport around the provided coordinates.
+   * Fits the map viewport around provided coordinates.
    */
-  protected fitBounds(latLngs: L.LatLngExpression[], maxZoom: number): void {
+  protected fitBounds(latLngs: L.LatLngExpression[], maxZoom = 12): void {
     if (!this.mapInstance || latLngs.length === 0) {
       return;
     }
 
     const bounds = L.latLngBounds(latLngs);
-
     this.mapInstance.fitBounds(bounds, {
-      padding: [60, 60],
+      padding: [50, 50],
       maxZoom,
     });
   }
 
   /**
-   * Removes all currently rendered markers and vector layers.
+   * Clears all layers from marker and vector groups.
    */
   protected clearLayers(): void {
     this.markerLayerGroup.clearLayers();
@@ -82,7 +91,7 @@ export abstract class LeafletMapService {
   }
 
   /**
-   * Destroys the Leaflet map and releases all associated resources.
+   * Destroys the Leaflet map instance and releases memory.
    */
   public disposeMap(): void {
     if (!this.mapInstance) {

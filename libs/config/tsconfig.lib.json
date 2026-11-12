@@ -5,6 +5,7 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "emitDeclarationOnly": false,
     "types": []
   },
   "include": ["src/**/*.ts"],
