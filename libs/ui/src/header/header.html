@@ -23,7 +23,8 @@
       (change)="onFileSelected($event)"
     />
     <button class="btn-primary" (click)="fileInput.click()">Upload Raw Data</button>
-    <button class="btn-secondary" (click)="stateService?.exportData('csv')">Export CSV</button>
-    <button class="btn-secondary" (click)="stateService?.exportData('json')">Export JSON</button>
+    <!-- Call signal with parentheses: stateService() -->
+    <button class="btn-secondary" (click)="stateService()?.exportData('csv')">Export CSV</button>
+    <button class="btn-secondary" (click)="stateService()?.exportData('json')">Export JSON</button>
   </div>
 </header>

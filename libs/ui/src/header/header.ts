@@ -1,24 +1,27 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
-export type HeaderStateService = {
+export interface HeaderStateService {
   loadRawFile(file: File): void;
   exportData(format: 'csv' | 'json'): void;
-};
+}
 
 @Component({
   selector: 'app-header',
-  imports: [],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class Header {
-  @Input() stateService?: HeaderStateService;
+  // Modern signal-based input (optional service)
+  readonly stateService = input<HeaderStateService>();
 
+  /**
+   * Handles the file selection event and passes the file to the state service.
+   */
   onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.stateService?.loadRawFile(file);
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.files && inputElement.files.length > 0) {
+      const file = inputElement.files[0];
+      this.stateService()?.loadRawFile(file);
     }
   }
 }
