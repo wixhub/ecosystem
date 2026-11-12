@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { DestroyRef } from '@angular/core';
+import { DestroyRef, Injectable } from '@angular/core';
 import { LeafletMapService } from './leaflet-map.service';
 import { CARTO_CONFIG } from '@es/config/carto';
 import * as L from 'leaflet';
 
 // Concrete subclass for testing the abstract base service
+@Injectable()
 class TestMapService extends LeafletMapService {}
 
 describe('LeafletMapService', () => {
