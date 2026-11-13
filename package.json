@@ -2,7 +2,9 @@
   "name": "@ecosystem",
   "version": "0.0.1",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky"
+  },
   "private": true,
   "dependencies": {
     "@angular/cdk": "^22.2.4",
@@ -47,9 +49,11 @@
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-playwright": "^1.6.2",
     "fake-indexeddb": "^6.2.7",
+    "husky": "^9.1.7",
     "jiti": "2.4.2",
     "jsdom": "^27.1.0",
     "jsonc-eslint-parser": "^2.1.0",
+    "lint-staged": "^17.6.0",
     "ng-packagr": "~22.1.0",
     "nx": "23.2.1",
     "postcss": "^8.4.5",
