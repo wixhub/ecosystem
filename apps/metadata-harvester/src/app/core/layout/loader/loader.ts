@@ -17,7 +17,7 @@ export class Loader implements OnInit, OnDestroy {
   // Index of the currently active fun fact card
   readonly currentIndex = signal<number>(0);
 
-  private intervalId: any;
+  private intervalId: ReturnType<typeof setInterval> | undefined;
 
   ngOnInit(): void {
     // Rotate cards every 25 seconds to seamlessly cover the total 150-second countdown duration
