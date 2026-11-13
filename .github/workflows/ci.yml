@@ -119,6 +119,7 @@ jobs:
         with:
           apiToken: ${{ env.CF_TOKEN }}
           accountId: ${{ env.CF_ACCOUNT_ID }}
+          wranglerVersion: '3.90.0'
           command: pages deploy dist/${{ matrix.app }}/browser --project-name=${{ matrix.app }} --branch=main
         env:
           CLOUDFLARE_API_TOKEN: ${{ env.CF_TOKEN }}
