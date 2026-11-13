@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal, ViewChild, effect } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CardType, MetadataApiService } from '@es/data-access';
+import { CardType, DatasetRecord, MetadataApiService } from '@es/data-access';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Loader } from '../../core/layout/loader/loader';
@@ -21,7 +21,7 @@ export class Dashboard implements OnInit {
   displayedColumns: string[] = ['id', 'title', 'format', 'status', 'recordCount', 'updatedAt'];
 
   // MatTableDataSource for sorting capabilities
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource = new MatTableDataSource<DatasetRecord>([]);
 
   // ViewChild setter to bind MatSort as soon as the table appears in the DOM
   @ViewChild(MatSort) set sort(value: MatSort) {
@@ -63,7 +63,7 @@ export class Dashboard implements OnInit {
     // Automatically update table data source whenever active card or raw data changes
     effect(() => {
       const card = this.activeCard();
-      let data: any[] = [];
+      let data: DatasetRecord[] = [];
 
       if (card === 'success') {
         data = this.datasets().filter((d) => d.status === 'PROCESSED');
