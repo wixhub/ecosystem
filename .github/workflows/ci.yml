@@ -34,7 +34,7 @@ jobs:
           ALLOWED_APPS: '["bio-stream", "data-curation", "eco-spec", "metadata-harvester", "movebank-explorer", "sensor-streams", "spatial-temporal"]'
         run: |
           # Get affected projects from Nx in JSON format (fallback to empty array if fails)
-          AFFECTED_JSON=$(npx nx show projects --affected --base=origin/main --head=HEAD --json || echo "[]")
+          AFFECTED_JSON=$(npx nx show projects --affected --base=HEAD~1 --head=HEAD --json || echo "[]")
 
           # Intersect Nx affected projects with the allowed whitelist using Node.js
           FILTERED_APPS=$(AFFECTED_JSON="$AFFECTED_JSON" node -e '
