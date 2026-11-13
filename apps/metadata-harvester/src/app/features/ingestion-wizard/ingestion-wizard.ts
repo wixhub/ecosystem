@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { HttpEventType } from '@angular/common/http';
-import { MetadataFormat, MetadataApiService } from '@es/data-access';
+import { HttpEventType, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { MetadataFormat, MetadataApiService, IngestionPayload } from '@es/data-access';
 
 @Component({
   selector: 'app-ingestion-wizard',
@@ -25,8 +25,9 @@ export class IngestionWizard {
     targetCollection: [''],
   });
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
+  onFileSelected(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const file = inputElement.files?.[0];
     if (file) {
       this.selectedFile.set(file);
       this.errorMessage.set(null);
@@ -42,23 +43,24 @@ export class IngestionWizard {
     }
   }
 
-  onSubmit() {
-    if (this.form.invalid || !this.selectedFile()) return;
+  onSubmit(): void {
+    const file = this.selectedFile();
+    if (this.form.invalid || !file) return;
 
     this.uploading.set(true);
     this.uploadProgress.set(0);
     this.errorMessage.set(null);
 
-    const payload = {
-      format: this.form.value.format as MetadataFormat,
-      file: this.selectedFile()!,
-      targetCollection: this.form.value.targetCollection!,
+    const payload: IngestionPayload = {
+      format: (this.form.value.format as MetadataFormat) ?? 'MOVEBANK_XML',
+      file: file,
+      targetCollection: this.form.value.targetCollection ?? '',
     };
 
     this.api.uploadDataset(payload).subscribe({
-      next: (event) => {
+      next: (event: HttpEvent<unknown>) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
-          const percent = Math.round(100 * (event.loaded / event.total));
+          const percent = Math.round((100 * event.loaded) / event.total);
           this.uploadProgress.set(percent);
         } else if (event.type === HttpEventType.Response) {
           this.uploading.set(false);
@@ -68,16 +70,23 @@ export class IngestionWizard {
           this.router.navigate(['/dashboard']);
         }
       },
-      error: (err: any) => {
+      error: (err: HttpErrorResponse) => {
         this.uploading.set(false);
         this.uploadProgress.set(0);
 
-        // Refresh resources even on error so metrics (like failed validations count) update immediately
+        // Refresh resources even on error so metrics update immediately
         this.api.refresh();
 
-        const serverMessage = err.error?.message || err.error || err.message;
+        const errObj = err.error as { message?: string } | string | null;
+        let serverMessage = '';
+        if (typeof errObj === 'string') {
+          serverMessage = errObj;
+        } else if (errObj && typeof errObj === 'object' && 'message' in errObj) {
+          serverMessage = errObj.message ?? '';
+        }
+
         this.errorMessage.set(
-          serverMessage || 'Validation failed. Please check your dataset structure.',
+          serverMessage || err.message || 'Validation failed. Please check your dataset structure.',
         );
       },
     });
