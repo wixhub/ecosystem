@@ -28,6 +28,7 @@ export default [
               onlyDependOnLibsWithTags: [
                 'type:config',
                 'type:data-access',
+                'type:map-access',
                 'type:ui',
               ],
             },
