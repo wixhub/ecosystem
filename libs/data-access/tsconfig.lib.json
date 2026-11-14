@@ -9,7 +9,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "composite": false,
-    "noEmitOnError": false
+    "noEmitOnError": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
