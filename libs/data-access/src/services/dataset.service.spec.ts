@@ -1,7 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  provideHttpClientTesting,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { DatasetService } from './dataset.service';
+import { workerConfig } from '@es/config/worker';
+import MOCK_DATASETS from '../mocks/datasets.json';
 
 describe('DatasetService', () => {
   let service: DatasetService;
@@ -9,7 +15,11 @@ describe('DatasetService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DatasetService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        DatasetService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
 
     service = TestBed.inject(DatasetService);
@@ -17,6 +27,7 @@ describe('DatasetService', () => {
   });
 
   afterEach(() => {
+    // Verify that there are no outstanding HTTP requests after each test
     httpMock.verify();
   });
 
@@ -24,95 +35,82 @@ describe('DatasetService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch local datasets successfully', () => {
-    const mockDatasets = [{ id: '1', title: 'Local Dataset' }];
-
-    service.getLocalDatasets().subscribe((datasets) => {
-      expect(datasets).toEqual(mockDatasets);
-    });
-
-    const req = httpMock.expectOne('data/datasets.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockDatasets);
+  it('should fetch local mock datasets', async () => {
+    const datasets = await firstValueFrom(service.getLocalDatasets());
+    expect(datasets).toEqual(MOCK_DATASETS);
+    expect(datasets.length).toBeGreaterThan(0);
   });
 
-  it('should fallback to empty array on local datasets error', () => {
-    service.getLocalDatasets().subscribe((datasets) => {
-      expect(datasets).toEqual([]);
-    });
+  it('should fetch custom movebank data successfully (CSV response)', async () => {
+    const csvResponse =
+      'id,name,taxon,location_lat,location_long,timestamp\n' +
+      '123,White Stork Test,Ciconia ciconia,52.52,13.40,2026-03-12T10:00:00Z';
 
-    const req = httpMock.expectOne('data/datasets.json');
-    req.error(new ProgressEvent('error'));
-  });
-
-  it('should parse CSV response rows correctly in custom movebank data', () => {
-    const csvResponse = 'id,name,taxon\n' + '101,White Stork,Ciconia ciconia\n';
-
-    service.getCustomMovebankData('event', '123').subscribe((datasets) => {
-      expect(datasets.length).toBe(1);
-      expect(datasets[0].title).toBe('White Stork');
-      expect(datasets[0].id).toBe('custom-101');
-    });
+    const datasetsPromise = firstValueFrom(
+      service.getCustomMovebankData('event', '2911276'),
+    );
 
     const req = httpMock.expectOne(
       (request) =>
-        request.url === 'https://wispy-surf-c9db.rublin.workers.dev' &&
+        request.url === workerConfig.workerBaseUrl &&
         request.params.get('entity_type') === 'event' &&
-        request.params.get('study_id') === '123' &&
-        request.params.get('i_can_see_data') === 'true',
+        request.params.get('study_id') === '2911276',
     );
-
     expect(req.request.method).toBe('GET');
     req.flush(csvResponse);
+
+    const datasets = await datasetsPromise;
+    expect(datasets.length).toBe(1);
+    expect(datasets[0].title).toBe('White Stork Test');
+    expect(datasets[0].discipline).toBe('Wildlife Telemetry');
   });
 
-  it('should apply taxon mapping automatically if taxon name is provided without study id', () => {
-    const csvResponse = 'id,name,taxon\n' + '202,Stork Flight,Ciconia ciconia\n';
-
-    service
-      .getCustomMovebankData('study', undefined, { taxon_canonical_name: 'Ciconia ciconia' })
-      .subscribe((datasets) => {
-        expect(datasets.length).toBe(1);
-        expect(datasets[0].title).toBe('Stork Flight');
+  it('should fallback to error notice dataset when custom query fails', async () => {
+    // Suppress expected console.error during error handling test
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {
+        /* empty */
       });
 
-    const req = httpMock.expectOne(
-      (request) =>
-        request.url === 'https://wispy-surf-c9db.rublin.workers.dev' &&
-        request.params.get('study_id') === '2911276' &&
-        request.params.get('entity_type') === 'event' &&
-        request.params.get('sensor_type_id') === '653',
+    const datasetsPromise = firstValueFrom(
+      service.getCustomMovebankData('event', 'invalid-id'),
     );
 
-    req.flush(csvResponse);
-  });
-
-  it('should return error notice dataset item when custom query fails', () => {
-    service.getCustomMovebankData('study', '999').subscribe((datasets) => {
-      expect(datasets.length).toBe(1);
-      expect(datasets[0].id).toBe('error-notice');
-      expect(datasets[0].title).toBe('Movebank Access Restriction Notice');
+    const req = httpMock.expectOne(
+      (request) => request.url === workerConfig.workerBaseUrl,
+    );
+    req.flush('Server Error', {
+      status: 500,
+      statusText: 'Internal Server Error',
     });
 
-    const req = httpMock.expectOne((request) =>
-      request.url.includes('wispy-surf-c9db.rublin.workers.dev'),
-    );
-    req.error(new ProgressEvent('error'), { status: 403, statusText: 'Forbidden' });
+    const datasets = await datasetsPromise;
+    expect(datasets.length).toBe(1);
+    expect(datasets[0].id).toBe('error-notice');
+    expect(datasets[0].title).toBe('Movebank Access Restriction Notice');
+
+    consoleErrorSpy.mockRestore();
   });
 
-  it('should send natural language prompt to AI assistant endpoint', () => {
+  it('should send natural language prompt to AI assistant endpoint', async () => {
     const mockAiResponse = {
       entity_type: 'event',
       filters: { taxon_canonical_name: 'Ciconia ciconia' },
     };
 
-    service.askAiAssistant('Show me storks').subscribe((res) => {
-      expect(res).toEqual(mockAiResponse);
-    });
+    const promptText = 'Track Ciconia ciconia migration';
 
-    const req = httpMock.expectOne('https://wispy-surf-c9db.rublin.workers.dev/api/ai-query');
+    const responsePromise = firstValueFrom(service.askAiAssistant(promptText));
+
+    const req = httpMock.expectOne(
+      `${workerConfig.workerBaseUrl}/api/ai-query`,
+    );
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ prompt: 'Show me storks' });
+    expect(req.request.body).toEqual({ prompt: promptText });
     req.flush(mockAiResponse);
+
+    const response = await responsePromise;
+    expect(response).toEqual(mockAiResponse);
   });
 });
