@@ -1,22 +1,5 @@
 <main class="eco-container">
-  <header class="eco-card">
-    <h1>Movebank Specification Builder</h1>
-    <p>Step-by-step wizard to configure field telemetry parameters for scientific research</p>
-
-    <!-- Progress Indicator Bar -->
-    <div class="stepper-indicators">
-      @for (step of builderService.steps; track step; let idx = $index) {
-        <div
-          class="step-indicator"
-          [class.active]="builderService.currentStepIndex() === idx"
-          [class.completed]="builderService.currentStepIndex() > idx"
-        >
-          <span>{{ idx + 1 }}</span>
-          <label>{{ step | uppercase }}</label>
-        </div>
-      }
-    </div>
-  </header>
+  <app-header />
 
   <section class="eco-card">
     <div class="step-header">
@@ -142,3 +125,5 @@
     </section>
   }
 </main>
+
+<app-footer />

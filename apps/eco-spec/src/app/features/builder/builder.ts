@@ -1,9 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { BuilderService } from '@es/data-access';
 import { UpperCasePipe } from '@angular/common';
+import { Header } from '../../layout/header/header';
+import { Footer } from '../../layout/footer/footer';
 
 @Component({
-  imports: [UpperCasePipe],
+  imports: [UpperCasePipe, Header, Footer],
   selector: 'app-builder',
   styleUrl: './builder.scss',
   templateUrl: './builder.html',
